@@ -1,13 +1,11 @@
-import pygame
-
 from src.blackboard import Blackboard
 from src.constants import *
-from src.game import GameObject
+from src.interfaces import Updatable
 from src.utils import load_image, render_text
 from os import path
 
 
-class Playground(GameObject):
+class Playground(Updatable):
   def __init__(
       self,
       blackboard: Blackboard,

@@ -1,5 +1,4 @@
-import pygame
-
+from src.bat import Bat
 from src.blackboard import Blackboard
 from src.constants import *
 from src.playground import Playground
@@ -22,12 +21,16 @@ class Breakout:
       lives=INITIAL_LIVES,
     )
 
-    self._game_objects = [
+    self._updatable_objects = [
       Playground(
         blackboard=self._blackboard,
         pattern_group=self._background_group,
         boundaries_group=self._foreground_group,
         text_group=self._foreground_group,
+      ),
+      Bat(
+        bat_group=self._middleground_group,
+        shadow_group=self._background_group,
       )
     ]
 
@@ -44,7 +47,7 @@ class Breakout:
         if event.type == pygame.QUIT:
           running = False
 
-      for game_object in self._game_objects:
+      for game_object in self._updatable_objects:
         game_object.update(delta_ms)
 
       self._screen.fill(SCREEN_COLOR)
