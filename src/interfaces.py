@@ -1,7 +1,7 @@
-from abc import abstractmethod
+from abc import ABC, abstractmethod
 
 
-class GameObject:
+class Updatable(ABC):
   @abstractmethod
   def update(self, delta_ms: float) -> None:
     pass
