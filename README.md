@@ -1,2 +1,2 @@
-# breakout
-Breakout implemented in pygame
+# Breakout
+Basic breakout game implemented in pygame
