@@ -73,10 +73,13 @@ class Playground(Updatable):
       ),
     ]
 
-  def get_collisions(self, delta_ms: float) -> List[Collision]:
+  def get_collisions(self) -> List[Collision]:
     return self._collision_rects
 
-  def update(self, delta_ms: float, colliding_with: Collision | None) -> None:
+  def has_collided(self, colliding_with: Collision) -> None:
+    return
+
+  def update(self, delta_ms: float) -> None:
     if self._previous_blackboard == self._blackboard:
       # Same values as before, no need to update the textures
       return

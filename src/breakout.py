@@ -43,8 +43,8 @@ class Breakout:
   def __del__(self):
     pygame.quit()
 
-  def _find_collision(self, delta_ms: float, object_to_check_collision: Updatable) -> Collision | None:
-    collisions_to_check = object_to_check_collision.get_collisions(delta_ms)
+  def _find_collision(self, object_to_check_collision: Updatable) -> Collision | None:
+    collisions_to_check = object_to_check_collision.get_collisions()
     if not collisions_to_check:
       return None
 
@@ -53,7 +53,7 @@ class Breakout:
         continue
 
       for collision1 in collisions_to_check:
-        for collision2 in game_object.get_collisions(delta_ms):
+        for collision2 in game_object.get_collisions():
           if pygame.FRect.colliderect(collision1.rect, collision2.rect):
             return collision2
 
@@ -73,12 +73,11 @@ class Breakout:
         break
 
       for game_object in self._updatable_objects:
-        collision = self._find_collision(delta_ms, game_object)
+        game_object.update(delta_ms)
 
-        game_object.update(
-          delta_ms=delta_ms,
-          colliding_with=collision
-        )
+        collision = self._find_collision(game_object)
+        if collision:
+          game_object.has_collided(collision)
 
       self._screen.fill(SCREEN_COLOR)
       self._background_group.draw(self._screen)
