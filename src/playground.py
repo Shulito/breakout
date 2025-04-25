@@ -73,6 +73,9 @@ class Playground(Updatable):
       ),
     ]
 
+  def reacts_to_collisions(self) -> bool:
+    return False
+
   def get_collisions(self) -> List[Collision]:
     return self._collision_rects
 

@@ -29,6 +29,9 @@ class Bat(Updatable):
     self._shadow_sprite.rect = self._shadow_sprite.image.get_frect(center=BAT_INITIAL_COORD)
     self._shadow_sprite.rect.center += SHADOW_OFFSET
 
+  def reacts_to_collisions(self) -> bool:
+    return True
+
   def get_collisions(self) -> List[Collision]:
     return [
       Collision(

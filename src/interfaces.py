@@ -5,6 +5,10 @@ from src.collision import Collision
 
 class Updatable(ABC):
   @abstractmethod
+  def reacts_to_collisions(self) -> bool:
+    pass
+
+  @abstractmethod
   def get_collisions(self) -> List[Collision]:
     pass
 
