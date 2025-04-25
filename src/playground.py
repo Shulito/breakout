@@ -1,7 +1,7 @@
 from typing import List
 
 from src.blackboard import Blackboard
-from src.collision import Collision, CollisionType
+from src.collision import Collision, ObjectType
 from src.constants import *
 from src.interfaces import Updatable
 from src.utils import load_image, render_text
@@ -60,15 +60,15 @@ class Playground(Updatable):
     # Collision rects
     self._collision_rects = [
       Collision(
-        type=CollisionType.WALL,
+        object_type=ObjectType.WALL,
         rect=pygame.FRect((0, 32), (80, 567))
       ),
       Collision(
-        type=CollisionType.WALL,
+        object_type=ObjectType.WALL,
         rect=pygame.FRect((580, 32), (80, 567))
       ),
       Collision(
-        type=CollisionType.WALL,
+        object_type=ObjectType.WALL,
         rect=pygame.FRect((0, 0), (595, 31))
       ),
     ]
