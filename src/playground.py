@@ -6,6 +6,7 @@ import pygame
 from src.blackboard import Blackboard
 from src.collision import Collision, ObjectType
 from src.constants import (
+  BOUNDARIES_TOP_LEFT_COORD,
   CONTENT_FONT_COLOR,
   CONTENT_FONT_SIZE,
   FONTS_FOLDER_PATH,
@@ -21,9 +22,10 @@ from src.constants import (
   STAGE_IMAGES_FOLDER_PATH,
   TITLE_FONT_COLOR,
   TITLE_FONT_SIZE,
+  CoordPosition,
 )
 from src.interfaces import Updatable
-from src.utils import load_image, render_text
+from src.utils import create_sprite_from_surface, load_image, render_text
 
 
 class Playground(Updatable):
@@ -64,16 +66,22 @@ class Playground(Updatable):
       for y in range(0, PLAYGROUND_HEIGHT, pattern_surface.get_height()):
         pattern_surface_tiled.blit(pattern_surface, (x, y))
 
-    pattern_sprite = pygame.sprite.Sprite(pattern_group)
-    pattern_sprite.image = pattern_surface_tiled
-    pattern_sprite.rect = pattern_sprite.image.get_frect(topleft=PLAYGROUND_TOP_LEFT_COORD)
+    create_sprite_from_surface(
+      surface=pattern_surface_tiled,
+      coord_position=CoordPosition.TOP_LEFT,
+      coord=PLAYGROUND_TOP_LEFT_COORD,
+      sprite_group=pattern_group
+    )
 
     # boundaries
     boundaries_surface = load_image(path.join(STAGE_IMAGES_FOLDER_PATH, "boundaries.png"))
 
-    boundaries_sprite = pygame.sprite.Sprite(boundaries_group)
-    boundaries_sprite.image = boundaries_surface
-    boundaries_sprite.rect = boundaries_sprite.image.get_frect(topleft=(0, 0))
+    create_sprite_from_surface(
+      surface=boundaries_surface,
+      coord_position=CoordPosition.TOP_LEFT,
+      coord=BOUNDARIES_TOP_LEFT_COORD,
+      sprite_group=boundaries_group
+    )
 
     # Collision rects
     self._collision_rects = [
