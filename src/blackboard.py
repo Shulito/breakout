@@ -6,7 +6,7 @@ class Blackboard:
   score: int
   lives: int
 
-  def clone(self) -> "Blackboard":
+  def copy(self) -> "Blackboard":
     return Blackboard(
       score=self.score,
       lives=self.lives
