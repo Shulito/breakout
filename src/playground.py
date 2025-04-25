@@ -1,4 +1,7 @@
+from typing import List
+
 from src.blackboard import Blackboard
+from src.collision import Collision, CollisionType
 from src.constants import *
 from src.interfaces import Updatable
 from src.utils import load_image, render_text
@@ -11,7 +14,7 @@ class Playground(Updatable):
       blackboard: Blackboard,
       pattern_group: pygame.sprite.Group,
       boundaries_group: pygame.sprite.Group,
-      text_group: pygame.sprite.Group,
+      text_group: pygame.sprite.Group
   ):
     self._blackboard = blackboard
     self._previous_blackboard = None
@@ -25,17 +28,17 @@ class Playground(Updatable):
 
     self._title_font = pygame.font.Font(
       filename=path.join(FONTS_FOLDER_PATH, "Arcade.ttf"),
-      size=TITLE_FONT_SIZE,
+      size=TITLE_FONT_SIZE
     )
     self._content_font = pygame.font.Font(
       filename=path.join(FONTS_FOLDER_PATH, "Arcade.ttf"),
-      size=CONTENT_FONT_SIZE,
+      size=CONTENT_FONT_SIZE
     )
 
     # background pattern
     pattern_surface = load_image(
       file_path=path.join(STAGE_IMAGES_FOLDER_PATH, "pattern.png"),
-      has_transparency=False,
+      has_transparency=False
     )
 
     pattern_surface_tiled = pygame.Surface((PLAYGROUND_WIDTH, PLAYGROUND_HEIGHT))
@@ -54,49 +57,71 @@ class Playground(Updatable):
     boundaries_sprite.image = boundaries_surface
     boundaries_sprite.rect = boundaries_sprite.image.get_frect(topleft=(0, 0))
 
-  def update(self, delta_ms: float) -> None:
-    if self._previous_blackboard != self._blackboard:
-      self._previous_blackboard = self._blackboard.clone()
+    # Collision rects
+    self._collision_rects = [
+      Collision(
+        type=CollisionType.WALL,
+        rect=pygame.FRect((0, 32), (80, 567))
+      ),
+      Collision(
+        type=CollisionType.WALL,
+        rect=pygame.FRect((580, 32), (80, 567))
+      ),
+      Collision(
+        type=CollisionType.WALL,
+        rect=pygame.FRect((0, 0), (595, 31))
+      ),
+    ]
 
-      # remove old values from sprite group
-      if self._score_title_sprite:
-        self._score_title_sprite.kill()
-      if self._score_value_sprite:
-        self._score_value_sprite.kill()
-      if self._lives_title_sprite:
-        self._lives_title_sprite.kill()
-      if self._lives_value_sprite:
-        self._lives_value_sprite.kill()
+  def get_collisions(self, delta_ms: float) -> List[Collision]:
+    return self._collision_rects
 
-      # create new sprites with new values
-      self._score_title_sprite = render_text(
-        text=PLAYGROUND_SCORE_TITLE,
-        font=self._title_font,
-        color=TITLE_FONT_COLOR,
-        group_to_add=self._text_group,
-        coordinates=PLAYGROUND_SCORE_TITLE_COORD,
-      )
+  def update(self, delta_ms: float, colliding_with: Collision | None) -> None:
+    if self._previous_blackboard == self._blackboard:
+      # Same values as before, no need to update the textures
+      return
 
-      self._score_value_sprite = render_text(
-        text=str(self._blackboard.score),
-        font=self._content_font,
-        color=CONTENT_FONT_COLOR,
-        group_to_add=self._text_group,
-        coordinates=PLAYGROUND_SCORE_VALUE_COORD,
-      )
+    self._previous_blackboard = self._blackboard.clone()
 
-      self._lives_title_sprite = render_text(
-        text=PLAYGROUND_LIVES_TITLE,
-        font=self._title_font,
-        color=TITLE_FONT_COLOR,
-        group_to_add=self._text_group,
-        coordinates=PLAYGROUND_LIVES_TITLE_COORD,
-      )
+    # remove old values from sprite group
+    if self._score_title_sprite:
+      self._score_title_sprite.kill()
+    if self._score_value_sprite:
+      self._score_value_sprite.kill()
+    if self._lives_title_sprite:
+      self._lives_title_sprite.kill()
+    if self._lives_value_sprite:
+      self._lives_value_sprite.kill()
 
-      self._lives_value_sprite = render_text(
-        text=str(self._blackboard.lives),
-        font=self._content_font,
-        color=CONTENT_FONT_COLOR,
-        group_to_add=self._text_group,
-        coordinates=PLAYGROUND_LIVES_VALUE_COORD,
-      )
+    # create new sprites with new values
+    self._score_title_sprite = render_text(
+      text=PLAYGROUND_SCORE_TITLE,
+      font=self._title_font,
+      color=TITLE_FONT_COLOR,
+      group_to_add=self._text_group,
+      coordinates=PLAYGROUND_SCORE_TITLE_COORD
+    )
+
+    self._score_value_sprite = render_text(
+      text=str(self._blackboard.score),
+      font=self._content_font,
+      color=CONTENT_FONT_COLOR,
+      group_to_add=self._text_group,
+      coordinates=PLAYGROUND_SCORE_VALUE_COORD
+    )
+
+    self._lives_title_sprite = render_text(
+      text=PLAYGROUND_LIVES_TITLE,
+      font=self._title_font,
+      color=TITLE_FONT_COLOR,
+      group_to_add=self._text_group,
+      coordinates=PLAYGROUND_LIVES_TITLE_COORD
+    )
+
+    self._lives_value_sprite = render_text(
+      text=str(self._blackboard.lives),
+      font=self._content_font,
+      color=CONTENT_FONT_COLOR,
+      group_to_add=self._text_group,
+      coordinates=PLAYGROUND_LIVES_VALUE_COORD
+    )

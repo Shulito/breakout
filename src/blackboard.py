@@ -9,5 +9,5 @@ class Blackboard:
   def clone(self) -> "Blackboard":
     return Blackboard(
       score=self.score,
-      lives=self.lives,
+      lives=self.lives
     )

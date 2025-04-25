@@ -5,11 +5,11 @@ import pygame
 
 
 def get_direction_from_pressed_keys() -> pygame.math.Vector2:
-  keys = pygame.key.get_pressed()
+  pressed_keys = pygame.key.get_pressed()
   final_direction = pygame.math.Vector2(0.0, 0.0)
 
   for key in KEYS_TO_DIRECTIONS_MAPPING.keys():
-    if keys[key]:
+    if pressed_keys[key]:
       final_direction += KEYS_TO_DIRECTIONS_MAPPING[key]
 
   return final_direction.normalize() if final_direction else final_direction
