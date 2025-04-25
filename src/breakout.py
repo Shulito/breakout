@@ -75,6 +75,9 @@ class Breakout:
       for game_object in self._updatable_objects:
         game_object.update(delta_ms)
 
+        if not game_object.reacts_to_collisions():
+          continue
+
         collision = self._find_collision(game_object)
         if collision:
           game_object.has_collided(collision)
