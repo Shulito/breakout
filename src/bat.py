@@ -37,14 +37,14 @@ class Bat(Updatable):
       )
     ]
 
-  def has_collided(self, colliding_with: Collision) -> None:
-    if colliding_with.object_type == ObjectType.WALL:
-      if colliding_with.rect.center[0] < self._bat_sprite.rect.center[0]:
+  def has_collided(self, collision: Collision) -> None:
+    if collision.object_type == ObjectType.WALL:
+      if collision.rect.center[0] < self._bat_sprite.rect.center[0]:
         # Colliding to the left
-        self._bat_sprite.rect.topleft = (colliding_with.rect.topright[0], self._bat_sprite.rect.topleft[1])
+        self._bat_sprite.rect.topleft = (collision.rect.topright[0], self._bat_sprite.rect.topleft[1])
       else:
         # Colliding to the right
-        self._bat_sprite.rect.topright = (colliding_with.rect.topleft[0], self._bat_sprite.rect.topleft[1])
+        self._bat_sprite.rect.topright = (collision.rect.topleft[0], self._bat_sprite.rect.topleft[1])
 
   def update(self, delta_ms: float) -> None:
     direction = get_direction_from_pressed_keys()

@@ -76,7 +76,7 @@ class Playground(Updatable):
   def get_collisions(self) -> List[Collision]:
     return self._collision_rects
 
-  def has_collided(self, colliding_with: Collision) -> None:
+  def has_collided(self, collision: Collision) -> None:
     return
 
   def update(self, delta_ms: float) -> None:
