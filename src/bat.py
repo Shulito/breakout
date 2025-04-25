@@ -49,6 +49,8 @@ class Bat(Updatable):
         # Colliding to the right
         self._bat_sprite.rect.topright = (collision.rect.topleft[0], self._bat_sprite.rect.topleft[1])
 
+      self._shadow_sprite.rect.center = self._bat_sprite.rect.center + SHADOW_OFFSET
+
   def update(self, delta_ms: float) -> None:
     direction = get_direction_from_pressed_keys()
     self._bat_sprite.rect.center += direction * BAT_VELOCITY * delta_ms
