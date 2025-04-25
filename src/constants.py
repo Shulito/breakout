@@ -1,3 +1,4 @@
+from enum import Enum
 from os import path
 from typing import Final, Tuple
 
@@ -18,7 +19,14 @@ SCREEN_COLOR: Final[Tuple[int, int, int]] = (0, 0, 0)
 SHADOW_COLOR: Final[Tuple[int, int, int, int]] = (0, 0, 0, 150)
 SHADOW_OFFSET: Final[pygame.math.Vector2] = pygame.math.Vector2(10, 10)
 
+class CoordPosition(Enum):
+  TOP_LEFT = 1
+  CENTER = 2
+
+
 # Playground constants
+BOUNDARIES_TOP_LEFT_COORD: Final[Tuple[int, int]] = (0, 0)
+
 PLAYGROUND_TOP_LEFT_COORD: Final[Tuple[int, int]] = (80, 32)
 PLAYGROUND_WIDTH: Final[int] = 500
 PLAYGROUND_HEIGHT: Final[int] = 568
