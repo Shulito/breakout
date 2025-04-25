@@ -1,7 +1,17 @@
+import pygame
+
 from src.bat import Bat
 from src.blackboard import Blackboard
 from src.collision import Collision
-from src.constants import *
+from src.constants import (
+  FPS,
+  GAME_TITLE,
+  INITIAL_LIVES,
+  INITIAL_SCORE,
+  SCREEN_COLOR,
+  SCREEN_HEIGHT,
+  SCREEN_WIDTH,
+)
 from src.interfaces import Updatable
 from src.playground import Playground
 

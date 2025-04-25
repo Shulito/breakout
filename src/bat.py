@@ -1,12 +1,19 @@
+from os import path
 from typing import List
 
+import pygame
 from pygame import BLEND_RGBA_MULT
 
 from src.collision import Collision, ObjectType
-from src.constants import *
+from src.constants import (
+  BAT_INITIAL_COORD,
+  BAT_VELOCITY,
+  PLAYER_IMAGES_FOLDER_PATH,
+  SHADOW_COLOR,
+  SHADOW_OFFSET,
+)
 from src.interfaces import Updatable
-from src.utils import load_image, get_direction_from_pressed_keys
-from os import path
+from src.utils import get_direction_from_pressed_keys, load_image
 
 
 class Bat(Updatable):

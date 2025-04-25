@@ -1,7 +1,8 @@
-from src.constants import *
 from typing import Tuple
 
 import pygame
+
+from src.constants import KEYS_TO_DIRECTIONS_MAPPING
 
 
 def get_direction_from_pressed_keys() -> pygame.math.Vector2:

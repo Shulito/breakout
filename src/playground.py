@@ -1,11 +1,29 @@
+from os import path
 from typing import List
+
+import pygame
 
 from src.blackboard import Blackboard
 from src.collision import Collision, ObjectType
-from src.constants import *
+from src.constants import (
+  CONTENT_FONT_COLOR,
+  CONTENT_FONT_SIZE,
+  FONTS_FOLDER_PATH,
+  PLAYGROUND_HEIGHT,
+  PLAYGROUND_LIVES_TITLE,
+  PLAYGROUND_LIVES_TITLE_COORD,
+  PLAYGROUND_LIVES_VALUE_COORD,
+  PLAYGROUND_SCORE_TITLE,
+  PLAYGROUND_SCORE_TITLE_COORD,
+  PLAYGROUND_SCORE_VALUE_COORD,
+  PLAYGROUND_TOP_LEFT_COORD,
+  PLAYGROUND_WIDTH,
+  STAGE_IMAGES_FOLDER_PATH,
+  TITLE_FONT_COLOR,
+  TITLE_FONT_SIZE,
+)
 from src.interfaces import Updatable
 from src.utils import load_image, render_text
-from os import path
 
 
 class Playground(Updatable):
