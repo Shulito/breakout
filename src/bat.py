@@ -30,30 +30,25 @@ class Bat(Updatable):
     self._shadow_sprite.rect = self._shadow_sprite.image.get_frect(center=BAT_INITIAL_COORD)
     self._shadow_sprite.rect.center += SHADOW_OFFSET
 
-  def get_collisions(self, delta_ms: float) -> List[Collision]:
-    # Calculate where you are going to be in the next frame to avoid collision clipping
-    direction = get_direction_from_pressed_keys()
-
-    collision_rect = self._bat_sprite.rect.copy()
-    collision_rect.center += direction * BAT_VELOCITY * delta_ms
-
+  def get_collisions(self) -> List[Collision]:
     return [
       Collision(
         type=CollisionType.BAT,
-        rect=collision_rect
+        rect=self._bat_sprite.rect
       )
     ]
 
-  def update(self, delta_ms: float, colliding_with: Collision | None) -> None:
-    if colliding_with and colliding_with.type == CollisionType.WALL:
+  def has_collided(self, colliding_with: Collision) -> None:
+    if colliding_with.type == CollisionType.WALL:
       if colliding_with.rect.center[0] < self._bat_sprite.rect.center[0]:
         # Colliding to the left
         self._bat_sprite.rect.topleft = (colliding_with.rect.topright[0], self._bat_sprite.rect.topleft[1])
       else:
         # Colliding to the right
         self._bat_sprite.rect.topright = (colliding_with.rect.topleft[0], self._bat_sprite.rect.topleft[1])
-    else:
-      direction = get_direction_from_pressed_keys()
-      self._bat_sprite.rect.center += direction * BAT_VELOCITY * delta_ms
+
+  def update(self, delta_ms: float) -> None:
+    direction = get_direction_from_pressed_keys()
+    self._bat_sprite.rect.center += direction * BAT_VELOCITY * delta_ms
 
     self._shadow_sprite.rect.center = self._bat_sprite.rect.center + SHADOW_OFFSET
