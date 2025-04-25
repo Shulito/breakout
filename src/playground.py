@@ -87,7 +87,7 @@ class Playground(Updatable):
       # Same values as before, no need to update the textures
       return
 
-    self._previous_blackboard = self._blackboard.clone()
+    self._previous_blackboard = self._blackboard.copy()
 
     # remove sprites with old values from sprite groups
     if self._score_title_sprite:
