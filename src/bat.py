@@ -1,6 +1,5 @@
 from typing import List
 
-import pygame
 from pygame import BLEND_RGBA_MULT
 
 from src.collision import Collision, ObjectType
