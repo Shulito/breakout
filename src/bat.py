@@ -3,7 +3,7 @@ from typing import List
 import pygame
 from pygame import BLEND_RGBA_MULT
 
-from src.collision import Collision, CollisionType
+from src.collision import Collision, ObjectType
 from src.constants import *
 from src.interfaces import Updatable
 from src.utils import load_image, get_direction_from_pressed_keys
@@ -33,13 +33,13 @@ class Bat(Updatable):
   def get_collisions(self) -> List[Collision]:
     return [
       Collision(
-        type=CollisionType.BAT,
+        object_type=ObjectType.BAT,
         rect=self._bat_sprite.rect
       )
     ]
 
   def has_collided(self, colliding_with: Collision) -> None:
-    if colliding_with.type == CollisionType.WALL:
+    if colliding_with.object_type == ObjectType.WALL:
       if colliding_with.rect.center[0] < self._bat_sprite.rect.center[0]:
         # Colliding to the left
         self._bat_sprite.rect.topleft = (colliding_with.rect.topright[0], self._bat_sprite.rect.topleft[1])

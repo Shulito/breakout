@@ -4,7 +4,7 @@ from enum import Enum
 import pygame
 
 
-class CollisionType(Enum):
+class ObjectType(Enum):
   WALL = 1
   BAT = 2
   BALL = 3
@@ -13,5 +13,5 @@ class CollisionType(Enum):
 
 @dataclass
 class Collision:
-  type: CollisionType
+  object_type: ObjectType
   rect: pygame.Rect | pygame.FRect
