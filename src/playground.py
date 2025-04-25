@@ -59,15 +59,15 @@ class Playground(Updatable):
 
     # Collision rects
     self._collision_rects = [
-      Collision(
+      Collision(  # Left wall
         object_type=ObjectType.WALL,
         rect=pygame.FRect((0, 32), (80, 567))
       ),
-      Collision(
+      Collision(  # Right wall
         object_type=ObjectType.WALL,
         rect=pygame.FRect((580, 32), (80, 567))
       ),
-      Collision(
+      Collision(  # Top wall
         object_type=ObjectType.WALL,
         rect=pygame.FRect((0, 0), (595, 31))
       ),
@@ -89,7 +89,7 @@ class Playground(Updatable):
 
     self._previous_blackboard = self._blackboard.clone()
 
-    # remove old values from sprite group
+    # remove sprites with old values from sprite groups
     if self._score_title_sprite:
       self._score_title_sprite.kill()
     if self._score_value_sprite:
