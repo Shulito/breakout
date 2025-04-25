@@ -14,4 +14,4 @@ class ObjectType(Enum):
 @dataclass
 class Collision:
   object_type: ObjectType
-  rect: pygame.Rect | pygame.FRect
+  rect: pygame.FRect
