@@ -9,7 +9,7 @@ class Updatable(ABC):
     pass
 
   @abstractmethod
-  def has_collided(self, colliding_with: Collision) -> None:
+  def has_collided(self, collision: Collision) -> None:
     pass
 
   @abstractmethod
