@@ -1,5 +1,9 @@
+from typing import List
+
+import pygame
 from pygame import BLEND_RGBA_MULT
 
+from src.collision import Collision, CollisionType
 from src.constants import *
 from src.interfaces import Updatable
 from src.utils import load_image, get_direction_from_pressed_keys
@@ -10,7 +14,7 @@ class Bat(Updatable):
   def __init__(
       self,
       bat_group: pygame.sprite.Group,
-      shadow_group: pygame.sprite.Group,
+      shadow_group: pygame.sprite.Group
   ):
     bat_surface = load_image(file_path=path.join(PLAYER_IMAGES_FOLDER_PATH, "bat.png"))
 
@@ -26,8 +30,30 @@ class Bat(Updatable):
     self._shadow_sprite.rect = self._shadow_sprite.image.get_frect(center=BAT_INITIAL_COORD)
     self._shadow_sprite.rect.center += SHADOW_OFFSET
 
-  def update(self, delta_ms: float) -> None:
+  def get_collisions(self, delta_ms: float) -> List[Collision]:
+    # Calculate where you are going to be in the next frame to avoid collision clipping
     direction = get_direction_from_pressed_keys()
 
-    self._bat_sprite.rect.center += direction * BAT_VELOCITY * delta_ms
+    collision_rect = self._bat_sprite.rect.copy()
+    collision_rect.center += direction * BAT_VELOCITY * delta_ms
+
+    return [
+      Collision(
+        type=CollisionType.BAT,
+        rect=collision_rect
+      )
+    ]
+
+  def update(self, delta_ms: float, colliding_with: Collision | None) -> None:
+    if colliding_with and colliding_with.type == CollisionType.WALL:
+      if colliding_with.rect.center[0] < self._bat_sprite.rect.center[0]:
+        # Colliding to the left
+        self._bat_sprite.rect.topleft = (colliding_with.rect.topright[0], self._bat_sprite.rect.topleft[1])
+      else:
+        # Colliding to the right
+        self._bat_sprite.rect.topright = (colliding_with.rect.topleft[0], self._bat_sprite.rect.topleft[1])
+    else:
+      direction = get_direction_from_pressed_keys()
+      self._bat_sprite.rect.center += direction * BAT_VELOCITY * delta_ms
+
     self._shadow_sprite.rect.center = self._bat_sprite.rect.center + SHADOW_OFFSET
