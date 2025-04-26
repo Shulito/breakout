@@ -16,8 +16,8 @@ from src.constants import (
   Y_COORD,
   Y_DOWN,
   Y_UP,
-  CoordPosition,
 )
+from src.coord import CoordPosition
 from src.interfaces import GameObject
 from src.notifications import NotificationType
 from src.utils import create_sprite_from_surface, follow_shadow, load_image
@@ -46,7 +46,7 @@ class Ball(GameObject):
   def reacts_to_collisions(self) -> bool:
     return True
 
-  def get_collisions(self) -> List[Collision]:
+  def get_collision_rects(self) -> List[Collision]:
     return [
       Collision(
         object_type=ObjectType.BALL,

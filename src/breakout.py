@@ -85,7 +85,7 @@ class Breakout:
     pygame.quit()
 
   def _find_collision(self, object_to_check_collision: GameObject) -> Collision | None:
-    collisions_to_check = object_to_check_collision.get_collisions()
+    collisions_to_check = object_to_check_collision.get_collision_rects()
     if not collisions_to_check:
       return None
 
@@ -94,7 +94,7 @@ class Breakout:
         continue
 
       for collision1 in collisions_to_check:
-        for collision2 in game_object.get_collisions():
+        for collision2 in game_object.get_collision_rects():
           if pygame.FRect.colliderect(collision1.rect, collision2.rect):
             return collision2
 

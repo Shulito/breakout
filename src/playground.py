@@ -22,8 +22,8 @@ from src.constants import (
   STAGE_IMAGES_FOLDER_PATH,
   TITLE_FONT_COLOR,
   TITLE_FONT_SIZE,
-  CoordPosition,
 )
+from src.coord import CoordPosition
 from src.interfaces import GameObject
 from src.notifications import NotificationType
 from src.utils import create_sprite_from_surface, load_image, render_text
@@ -135,7 +135,7 @@ class Playground(GameObject):
   def reacts_to_collisions(self) -> bool:
     return False
 
-  def get_collisions(self) -> List[Collision]:
+  def get_collision_rects(self) -> List[Collision]:
     return self._collision_rects
 
   def has_collided(self, collision: Collision) -> None:
