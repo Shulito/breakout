@@ -24,7 +24,7 @@ class GameObject(ABC):
     pass
 
   @abstractmethod
-  def emit_notifications(self) -> Set[NotificationType] | None:
+  def emit_notification(self) -> NotificationType | None:
     pass
 
   @abstractmethod
