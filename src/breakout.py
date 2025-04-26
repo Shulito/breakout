@@ -1,5 +1,8 @@
+from typing import Dict, Set
+
 import pygame
 
+from src.ball import Ball
 from src.bat import Bat
 from src.blackboard import Blackboard
 from src.collision import Collision
@@ -12,7 +15,8 @@ from src.constants import (
   SCREEN_HEIGHT,
   SCREEN_WIDTH,
 )
-from src.interfaces import Updatable
+from src.interfaces import GameObject
+from src.notifications import NotificationType
 from src.playground import Playground
 
 
@@ -33,6 +37,7 @@ class Breakout:
       lives=INITIAL_LIVES
     )
 
+    # Create game objects
     playground = Playground(
       blackboard=self._blackboard,
       pattern_group=self._background_group,
@@ -45,20 +50,39 @@ class Breakout:
       shadow_group=self._background_group
     )
 
-    self._updatable_objects = [
+    ball = Ball(
+      ball_group=self._middleground_group,
+      shadow_group=self._background_group
+    )
+
+    self._game_objects = [
       playground,
-      bat
+      bat,
+      ball
     ]
+
+    # Wire up notifications
+    self._notification_mapping: Dict[NotificationType, Set[GameObject]] = {
+      notification_type: set() for notification_type in NotificationType
+    }
+
+    for game_object in self._game_objects:
+      notification_types = game_object.get_interested_notification_types()
+      if not notification_types:
+        continue
+
+      for notification_type in notification_types:
+        self._notification_mapping[notification_type].add(game_object)
 
   def __del__(self):
     pygame.quit()
 
-  def _find_collision(self, object_to_check_collision: Updatable) -> Collision | None:
+  def _find_collision(self, object_to_check_collision: GameObject) -> Collision | None:
     collisions_to_check = object_to_check_collision.get_collisions()
     if not collisions_to_check:
       return None
 
-    for game_object in self._updatable_objects:
+    for game_object in self._game_objects:
       if object_to_check_collision == game_object:
         continue
 
@@ -82,15 +106,27 @@ class Breakout:
       if not running:
         break
 
-      for game_object in self._updatable_objects:
+      for game_object in self._game_objects:
+        # Update objects
         game_object.update(delta_ms)
 
+        # Check collisions
         if not game_object.reacts_to_collisions():
           continue
 
         collision = self._find_collision(game_object)
         if collision:
           game_object.has_collided(collision)
+
+        # Check notifications
+        notifications = game_object.emit_notifications()
+        if notifications:
+          for notification in notifications:
+            for game_object_to_notify in self._notification_mapping[notification]:
+              game_object_to_notify.receive_notification(
+                notification=notification,
+                blackboard=self._blackboard
+              )
 
       self._screen.fill(SCREEN_COLOR)
       self._background_group.draw(self._screen)

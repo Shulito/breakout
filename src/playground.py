@@ -1,5 +1,5 @@
 from os import path
-from typing import List
+from typing import List, Set, Tuple
 
 import pygame
 
@@ -24,11 +24,12 @@ from src.constants import (
   TITLE_FONT_SIZE,
   CoordPosition,
 )
-from src.interfaces import Updatable
+from src.interfaces import GameObject
+from src.notifications import NotificationType
 from src.utils import create_sprite_from_surface, load_image, render_text
 
 
-class Playground(Updatable):
+class Playground(GameObject):
   def __init__(
       self,
       blackboard: Blackboard,
@@ -36,8 +37,6 @@ class Playground(Updatable):
       boundaries_group: pygame.sprite.Group,
       text_group: pygame.sprite.Group
   ):
-    self._blackboard = blackboard
-    self._previous_blackboard = None
     self._score_title_sprite = None
     self._score_value_sprite = None
     self._lives_title_sprite = None
@@ -99,32 +98,9 @@ class Playground(Updatable):
       ),
     ]
 
-  def reacts_to_collisions(self) -> bool:
-    return False
+    self._render_labels(blackboard)
 
-  def get_collisions(self) -> List[Collision]:
-    return self._collision_rects
-
-  def has_collided(self, collision: Collision) -> None:
-    return
-
-  def update(self, delta_ms: float) -> None:
-    if self._previous_blackboard == self._blackboard:
-      # Same values as before, no need to update the textures
-      return
-
-    self._previous_blackboard = self._blackboard.copy()
-
-    # remove sprites with old values from sprite groups
-    if self._score_title_sprite:
-      self._score_title_sprite.kill()
-    if self._score_value_sprite:
-      self._score_value_sprite.kill()
-    if self._lives_title_sprite:
-      self._lives_title_sprite.kill()
-    if self._lives_value_sprite:
-      self._lives_value_sprite.kill()
-
+  def _render_labels(self, blackboard: Blackboard) -> None:
     # create new sprites with new values
     self._score_title_sprite = render_text(
       text=PLAYGROUND_SCORE_TITLE,
@@ -135,7 +111,7 @@ class Playground(Updatable):
     )
 
     self._score_value_sprite = render_text(
-      text=str(self._blackboard.score),
+      text=str(blackboard.score),
       font=self._content_font,
       color=CONTENT_FONT_COLOR,
       group_to_add=self._text_group,
@@ -151,9 +127,30 @@ class Playground(Updatable):
     )
 
     self._lives_value_sprite = render_text(
-      text=str(self._blackboard.lives),
+      text=str(blackboard.lives),
       font=self._content_font,
       color=CONTENT_FONT_COLOR,
       group_to_add=self._text_group,
       coordinates=PLAYGROUND_LIVES_VALUE_COORD
     )
+
+  def reacts_to_collisions(self) -> bool:
+    return False
+
+  def get_collisions(self) -> List[Collision]:
+    return self._collision_rects
+
+  def has_collided(self, collision: Collision) -> None:
+    return
+
+  def get_interested_notification_types(self) -> Set[NotificationType] | None:
+    return None
+
+  def emit_notifications(self) -> Set[NotificationType] | None:
+    return None
+
+  def receive_notification(self, notification: NotificationType, blackboard: Blackboard) -> None:
+    pass
+
+  def update(self, delta_ms: float) -> None:
+    pass
