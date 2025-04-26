@@ -1,5 +1,5 @@
 from os import path
-from typing import List, Set, Tuple
+from typing import List, Set
 
 import pygame
 
@@ -85,20 +85,18 @@ class Playground(GameObject):
     # Collision rects
     self._collision_rects = [
       Collision(  # Left wall
-        object_type=ObjectType.WALL,
+        object_type=ObjectType.SIDE_WALL,
         rect=pygame.FRect((0, 32), (80, 567))
       ),
       Collision(  # Right wall
-        object_type=ObjectType.WALL,
+        object_type=ObjectType.SIDE_WALL,
         rect=pygame.FRect((580, 32), (80, 567))
       ),
       Collision(  # Top wall
-        object_type=ObjectType.WALL,
+        object_type=ObjectType.TOP_WALL,
         rect=pygame.FRect((0, 0), (595, 31))
       ),
     ]
-
-    self._render_labels(blackboard)
 
   def _render_labels(self, blackboard: Blackboard) -> None:
     # create new sprites with new values
@@ -149,8 +147,10 @@ class Playground(GameObject):
   def emit_notification(self) -> NotificationType | None:
     return None
 
-  def receive_notification(self, notification: NotificationType, blackboard: Blackboard) -> None:
-    pass
+  def receive_notification(self, notification_type: NotificationType, blackboard: Blackboard) -> None:
+    match notification_type:
+      case NotificationType.INITIAL_SETUP:
+        self._render_labels(blackboard)
 
   def update(self, delta_ms: float) -> None:
     pass

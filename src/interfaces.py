@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Set, Tuple
+from typing import List, Set
 
 from src.blackboard import Blackboard
 from src.collision import Collision
@@ -28,7 +28,7 @@ class GameObject(ABC):
     pass
 
   @abstractmethod
-  def receive_notification(self, notification: NotificationType, blackboard: Blackboard) -> None:
+  def receive_notification(self, notification_type: NotificationType, blackboard: Blackboard) -> None:
     pass
 
   @abstractmethod

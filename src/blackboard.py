@@ -1,13 +1,10 @@
 from dataclasses import dataclass
 
+import pygame
+
 
 @dataclass
 class Blackboard:
   score: int
   lives: int
-
-  def copy(self) -> "Blackboard":
-    return Blackboard(
-      score=self.score,
-      lives=self.lives
-    )
+  bat_frect: pygame.FRect | None

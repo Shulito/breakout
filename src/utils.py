@@ -1,14 +1,16 @@
-from typing import Tuple
+from typing import Set, Tuple
 
 import pygame
 from pygame import BLEND_RGBA_MULT
 
 from src.constants import (
   KEYS_TO_DIRECTIONS_MAPPING,
+  KEYS_TO_NOTIFICATION_MAPPING,
   SHADOW_COLOR,
   SHADOW_OFFSET,
   CoordPosition,
 )
+from src.notifications import NotificationType
 
 
 def get_direction_from_pressed_keys() -> pygame.math.Vector2:
@@ -20,6 +22,17 @@ def get_direction_from_pressed_keys() -> pygame.math.Vector2:
       final_direction += KEYS_TO_DIRECTIONS_MAPPING[key]
 
   return final_direction.normalize() if final_direction else final_direction
+
+
+def get_notifications_from_pressed_keys() -> Set[NotificationType]:
+  pressed_keys = pygame.key.get_pressed()
+  notifications = set()
+
+  for key in KEYS_TO_NOTIFICATION_MAPPING.keys():
+    if pressed_keys[key]:
+      notifications.add(KEYS_TO_NOTIFICATION_MAPPING[key])
+
+  return notifications
 
 
 def load_image(file_path: str, has_transparency: bool = True) -> pygame.Surface:

@@ -5,10 +5,11 @@ import pygame
 
 
 class ObjectType(Enum):
-  WALL = 1
+  BALL = 1
   BAT = 2
-  BALL = 3
-  BRICK = 4
+  BRICK = 3
+  SIDE_WALL = 4
+  TOP_WALL = 5
 
 
 @dataclass

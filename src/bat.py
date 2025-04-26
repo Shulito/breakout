@@ -1,5 +1,5 @@
 from os import path
-from typing import List, Set, Tuple
+from typing import List, Set
 
 import pygame
 
@@ -9,6 +9,8 @@ from src.constants import (
   BAT_INITIAL_COORD,
   BAT_VELOCITY,
   PLAYER_IMAGES_FOLDER_PATH,
+  X_COORD,
+  Y_COORD,
   CoordPosition,
 )
 from src.interfaces import GameObject
@@ -37,6 +39,9 @@ class Bat(GameObject):
       shadow_group=shadow_group
     )
 
+  def get_frect(self) -> pygame.FRect:
+    return self._bat_sprite.rect
+
   def reacts_to_collisions(self) -> bool:
     return True
 
@@ -50,13 +55,19 @@ class Bat(GameObject):
 
   def has_collided(self, collision: Collision) -> None:
     match collision.object_type:
-      case ObjectType.WALL:
-        if collision.rect.center[0] < self._bat_sprite.rect.center[0]:
+      case ObjectType.SIDE_WALL:
+        if collision.rect.center[X_COORD] < self._bat_sprite.rect.center[X_COORD]:
           # Colliding to the left
-          self._bat_sprite.rect.topleft = (collision.rect.topright[0], self._bat_sprite.rect.topleft[1])
+          self._bat_sprite.rect.topleft = (
+            collision.rect.topright[X_COORD],
+            self._bat_sprite.rect.topleft[Y_COORD]
+          )
         else:
           # Colliding to the right
-          self._bat_sprite.rect.topright = (collision.rect.topleft[0], self._bat_sprite.rect.topleft[1])
+          self._bat_sprite.rect.topright = (
+            collision.rect.topleft[X_COORD],
+            self._bat_sprite.rect.topleft[Y_COORD]
+          )
 
         follow_shadow(self._bat_sprite, self._shadow_sprite)
 
@@ -66,7 +77,7 @@ class Bat(GameObject):
   def emit_notification(self) -> NotificationType | None:
     return None
 
-  def receive_notification(self, notification: NotificationType, blackboard: Blackboard) -> None:
+  def receive_notification(self, notification_type: NotificationType, blackboard: Blackboard) -> None:
     pass
 
   def update(self, delta_ms: float) -> None:

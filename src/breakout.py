@@ -18,6 +18,7 @@ from src.constants import (
 from src.interfaces import GameObject
 from src.notifications import NotificationType
 from src.playground import Playground
+from src.utils import get_notifications_from_pressed_keys
 
 
 class Breakout:
@@ -32,12 +33,13 @@ class Breakout:
     self._middleground_group = pygame.sprite.Group()
     self._foreground_group = pygame.sprite.Group()
 
+    # Create game objects
     self._blackboard = Blackboard(
       score=INITIAL_SCORE,
-      lives=INITIAL_LIVES
+      lives=INITIAL_LIVES,
+      bat_frect=None
     )
 
-    # Create game objects
     playground = Playground(
       blackboard=self._blackboard,
       pattern_group=self._background_group,
@@ -49,6 +51,8 @@ class Breakout:
       bat_group=self._middleground_group,
       shadow_group=self._background_group
     )
+
+    self._blackboard.bat_frect = bat.get_frect()
 
     ball = Ball(
       ball_group=self._middleground_group,
@@ -68,11 +72,14 @@ class Breakout:
 
     for game_object in self._game_objects:
       notification_types = game_object.get_interested_notification_types()
-      if not notification_types:
-        continue
+      if notification_types:
+        for notification_type in notification_types:
+          self._notification_mapping[notification_type].add(game_object)
 
-      for notification_type in notification_types:
-        self._notification_mapping[notification_type].add(game_object)
+      game_object.receive_notification(
+        notification_type=NotificationType.INITIAL_SETUP,
+        blackboard=self._blackboard
+      )
 
   def __del__(self):
     pygame.quit()
@@ -106,26 +113,32 @@ class Breakout:
       if not running:
         break
 
+      player_notifications = get_notifications_from_pressed_keys()
+
       for game_object in self._game_objects:
         # Update objects
         game_object.update(delta_ms)
 
         # Check collisions
-        if not game_object.reacts_to_collisions():
-          continue
-
-        collision = self._find_collision(game_object)
-        if collision:
-          game_object.has_collided(collision)
+        if game_object.reacts_to_collisions():
+          collision = self._find_collision(game_object)
+          if collision:
+            game_object.has_collided(collision)
 
         # Check notifications
         notification = game_object.emit_notification()
         if notification:
           for game_object_to_notify in self._notification_mapping[notification]:
             game_object_to_notify.receive_notification(
-              notification=notification,
+              notification_type=notification,
               blackboard=self._blackboard
             )
+
+        for player_notification in player_notifications:
+          game_object.receive_notification(
+            notification_type=player_notification,
+            blackboard=self._blackboard
+          )
 
       self._screen.fill(SCREEN_COLOR)
       self._background_group.draw(self._screen)
