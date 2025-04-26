@@ -12,7 +12,7 @@ class GameObject(ABC):
     pass
 
   @abstractmethod
-  def get_collisions(self) -> List[Collision]:
+  def get_collision_rects(self) -> List[Collision]:
     pass
 
   @abstractmethod

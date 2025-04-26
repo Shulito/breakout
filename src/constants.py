@@ -21,12 +21,6 @@ SCREEN_COLOR: Final[Tuple[int, int, int]] = (0, 0, 0)
 SHADOW_COLOR: Final[Tuple[int, int, int, int]] = (0, 0, 0, 150)
 SHADOW_OFFSET: Final[pygame.math.Vector2] = pygame.math.Vector2(10, 10)
 
-
-class CoordPosition(Enum):
-  TOP_LEFT = 1
-  CENTER = 2
-
-
 X_COORD: Final[int] = 0
 Y_COORD: Final[int] = 1
 

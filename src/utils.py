@@ -8,8 +8,8 @@ from src.constants import (
   KEYS_TO_NOTIFICATION_MAPPING,
   SHADOW_COLOR,
   SHADOW_OFFSET,
-  CoordPosition,
 )
+from src.coord import CoordPosition
 from src.notifications import NotificationType
 
 

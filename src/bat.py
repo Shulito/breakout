@@ -11,8 +11,8 @@ from src.constants import (
   PLAYER_IMAGES_FOLDER_PATH,
   X_COORD,
   Y_COORD,
-  CoordPosition,
 )
+from src.coord import CoordPosition
 from src.interfaces import GameObject
 from src.notifications import NotificationType
 from src.utils import (
@@ -45,7 +45,7 @@ class Bat(GameObject):
   def reacts_to_collisions(self) -> bool:
     return True
 
-  def get_collisions(self) -> List[Collision]:
+  def get_collision_rects(self) -> List[Collision]:
     return [
       Collision(
         object_type=ObjectType.BAT,
