@@ -1,8 +1,9 @@
 from os import path
-from typing import List
+from typing import List, Set, Tuple
 
 import pygame
 
+from src.blackboard import Blackboard
 from src.collision import Collision, ObjectType
 from src.constants import (
   BAT_INITIAL_COORD,
@@ -10,7 +11,8 @@ from src.constants import (
   PLAYER_IMAGES_FOLDER_PATH,
   CoordPosition,
 )
-from src.interfaces import Updatable
+from src.interfaces import GameObject
+from src.notifications import NotificationType
 from src.utils import (
   create_sprite_from_surface,
   follow_shadow,
@@ -19,7 +21,7 @@ from src.utils import (
 )
 
 
-class Bat(Updatable):
+class Bat(GameObject):
   def __init__(
       self,
       bat_group: pygame.sprite.Group,
@@ -47,15 +49,25 @@ class Bat(Updatable):
     ]
 
   def has_collided(self, collision: Collision) -> None:
-    if collision.object_type == ObjectType.WALL:
-      if collision.rect.center[0] < self._bat_sprite.rect.center[0]:
-        # Colliding to the left
-        self._bat_sprite.rect.topleft = (collision.rect.topright[0], self._bat_sprite.rect.topleft[1])
-      else:
-        # Colliding to the right
-        self._bat_sprite.rect.topright = (collision.rect.topleft[0], self._bat_sprite.rect.topleft[1])
+    match collision.object_type:
+      case ObjectType.WALL:
+        if collision.rect.center[0] < self._bat_sprite.rect.center[0]:
+          # Colliding to the left
+          self._bat_sprite.rect.topleft = (collision.rect.topright[0], self._bat_sprite.rect.topleft[1])
+        else:
+          # Colliding to the right
+          self._bat_sprite.rect.topright = (collision.rect.topleft[0], self._bat_sprite.rect.topleft[1])
 
-      follow_shadow(self._bat_sprite, self._shadow_sprite)
+        follow_shadow(self._bat_sprite, self._shadow_sprite)
+
+  def get_interested_notification_types(self) -> Set[NotificationType] | None:
+    return None
+
+  def emit_notifications(self) -> Set[NotificationType] | None:
+    return None
+
+  def receive_notification(self, notification: NotificationType, blackboard: Blackboard) -> None:
+    pass
 
   def update(self, delta_ms: float) -> None:
     direction = get_direction_from_pressed_keys()

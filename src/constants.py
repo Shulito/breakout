@@ -19,6 +19,7 @@ SCREEN_COLOR: Final[Tuple[int, int, int]] = (0, 0, 0)
 SHADOW_COLOR: Final[Tuple[int, int, int, int]] = (0, 0, 0, 150)
 SHADOW_OFFSET: Final[pygame.math.Vector2] = pygame.math.Vector2(10, 10)
 
+
 class CoordPosition(Enum):
   TOP_LEFT = 1
   CENTER = 2
@@ -58,6 +59,9 @@ KEYS_TO_DIRECTIONS_MAPPING: Final[dict[int, pygame.math.Vector2]] = {
   pygame.K_a: MOVE_LEFT_DIRECTION,
   pygame.K_KP4: MOVE_LEFT_DIRECTION
 }
+
+# Ball constants
+BALL_INITIAL_COORD: Final[Tuple[float, float]] = (BAT_INITIAL_COORD[0], 515)
 
 # File system constants
 CONTENT_FOLDER_PATH: Final[str] = path.abspath(path.join(path.dirname(__file__), "..", "content"))
