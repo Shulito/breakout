@@ -119,14 +119,13 @@ class Breakout:
           game_object.has_collided(collision)
 
         # Check notifications
-        notifications = game_object.emit_notifications()
-        if notifications:
-          for notification in notifications:
-            for game_object_to_notify in self._notification_mapping[notification]:
-              game_object_to_notify.receive_notification(
-                notification=notification,
-                blackboard=self._blackboard
-              )
+        notification = game_object.emit_notification()
+        if notification:
+          for game_object_to_notify in self._notification_mapping[notification]:
+            game_object_to_notify.receive_notification(
+              notification=notification,
+              blackboard=self._blackboard
+            )
 
       self._screen.fill(SCREEN_COLOR)
       self._background_group.draw(self._screen)

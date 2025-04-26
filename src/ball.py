@@ -44,7 +44,7 @@ class Ball(GameObject):
   def get_interested_notification_types(self) -> Set[NotificationType] | None:
     return None
 
-  def emit_notifications(self) -> Set[NotificationType] | None:
+  def emit_notification(self) -> NotificationType | None:
     return None
 
   def receive_notification(self, notification: NotificationType, blackboard: Blackboard) -> None:
