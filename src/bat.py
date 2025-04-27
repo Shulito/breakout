@@ -7,7 +7,7 @@ from src.blackboard import Blackboard
 from src.collision import Collision, ObjectType
 from src.constants import (
   BAT_INITIAL_COORD,
-  BAT_VELOCITY,
+  BAT_SPEED,
   PLAYER_IMAGES_FOLDER_PATH,
   X_COORD,
   Y_COORD,
@@ -72,7 +72,9 @@ class Bat(GameObject):
         follow_shadow(self._bat_sprite, self._shadow_sprite)
 
   def get_interested_notification_types(self) -> Set[NotificationType] | None:
-    return None
+    return {
+      NotificationType.BALL_MISSED
+    }
 
   def emit_notification(self) -> NotificationType | None:
     return None
@@ -82,6 +84,6 @@ class Bat(GameObject):
 
   def update(self, delta_ms: float) -> None:
     direction = get_direction_from_pressed_keys()
-    self._bat_sprite.rect.center += direction * BAT_VELOCITY * delta_ms
+    self._bat_sprite.rect.center += direction * BAT_SPEED * delta_ms
 
     follow_shadow(self._bat_sprite, self._shadow_sprite)

@@ -1,4 +1,4 @@
-from enum import Enum
+import math
 from os import path
 from typing import Dict, Final, Tuple
 
@@ -30,6 +30,24 @@ X_LEFT: Final[int] = -1
 Y_UP: Final[int] = -1
 Y_DOWN: Final[int] = 1
 
+VECTOR_LEFT: Final[pygame.Vector2] = pygame.Vector2(X_LEFT, 0)
+VECTOR_RIGHT: Final[pygame.Vector2] = pygame.Vector2(X_RIGHT, 0)
+
+VECTOR_45_DEGREES_RIGHT_UP: Final[pygame.Vector2] = pygame.Vector2(X_RIGHT, Y_UP).normalize()
+VECTOR_45_DEGREES_LEFT_UP: Final[pygame.Vector2] = pygame.Vector2(X_LEFT, Y_UP).normalize()
+
+RADIANS_340_DEGREES = math.radians(340)
+RADIANS_200_DEGREES = math.radians(200)
+
+VECTOR_20_DEGREES_RIGHT_UP: Final[pygame.Vector2] = pygame.Vector2(
+  math.cos(RADIANS_340_DEGREES),
+  math.sin(RADIANS_340_DEGREES)
+)
+VECTOR_20_DEGREES_LEFT_UP: Final[pygame.Vector2] = pygame.Vector2(
+  math.cos(RADIANS_200_DEGREES),
+  math.sin(RADIANS_200_DEGREES)
+)
+
 # Playground constants
 BOUNDARIES_TOP_LEFT_COORD: Final[Tuple[int, int]] = (0, 0)
 
@@ -51,18 +69,16 @@ CONTENT_FONT_COLOR: Final[Tuple[int, int, int]] = (214, 45, 36)
 
 # Bat constants
 BAT_INITIAL_COORD: Final[Tuple[float, float]] = (PLAYGROUND_WIDTH / 2 + PLAYGROUND_TOP_LEFT_COORD[X_COORD], 526)
-BAT_VELOCITY: Final[float] = 400.0
-
-MOVE_RIGHT_DIRECTION: Final[pygame.math.Vector2] = pygame.math.Vector2(1.0, 0.0)
-MOVE_LEFT_DIRECTION: Final[pygame.math.Vector2] = pygame.math.Vector2(-1.0, 0.0)
+BAT_SPEED: Final[float] = 400.0
+BAT_HALF_WIDTH: Final[int] = 39
 
 KEYS_TO_DIRECTIONS_MAPPING: Final[Dict[int, pygame.math.Vector2]] = {
-  pygame.K_RIGHT: MOVE_RIGHT_DIRECTION,
-  pygame.K_d: MOVE_RIGHT_DIRECTION,
-  pygame.K_KP6: MOVE_RIGHT_DIRECTION,
-  pygame.K_LEFT: MOVE_LEFT_DIRECTION,
-  pygame.K_a: MOVE_LEFT_DIRECTION,
-  pygame.K_KP4: MOVE_LEFT_DIRECTION
+  pygame.K_RIGHT: VECTOR_RIGHT,
+  pygame.K_d: VECTOR_RIGHT,
+  pygame.K_KP6: VECTOR_RIGHT,
+  pygame.K_LEFT: VECTOR_LEFT,
+  pygame.K_a: VECTOR_LEFT,
+  pygame.K_KP4: VECTOR_LEFT
 }
 
 KEYS_TO_NOTIFICATION_MAPPING: Final[Dict[int, NotificationType]] = {
@@ -71,9 +87,11 @@ KEYS_TO_NOTIFICATION_MAPPING: Final[Dict[int, NotificationType]] = {
 
 # Ball constants
 BALL_INITIAL_COORD: Final[Tuple[float, float]] = (BAT_INITIAL_COORD[0], 515)
-VERTICAL_OFFSET_BETWEEN_BALL_AND_BAT: Final[float] = BAT_INITIAL_COORD[Y_COORD] - BALL_INITIAL_COORD[Y_COORD]
+BALL_RADIUS: Final[int] = 4
 
-BALL_VELOCITY: Final[float] = 200.0
+BALL_SPEED_INITIAL: Final[float] = 200.0
+BALL_SPEED_MAX: Final[float] = 1200.0
+BALL_SPEED_INCREMENT: Final[float] = 20.0
 
 # File system constants
 CONTENT_FOLDER_PATH: Final[str] = path.abspath(path.join(path.dirname(__file__), "..", "content"))
@@ -84,3 +102,5 @@ PLAYER_IMAGES_FOLDER_PATH: Final[str] = path.join(IMAGES_FOLDER_PATH, "player")
 STAGE_IMAGES_FOLDER_PATH: Final[str] = path.join(IMAGES_FOLDER_PATH, "stage")
 
 FONTS_FOLDER_PATH: Final[str] = path.join(CONTENT_FOLDER_PATH, "fonts")
+
+AUDIO_FOLDER_PATH: Final[str] = path.join(CONTENT_FOLDER_PATH, "audio")
