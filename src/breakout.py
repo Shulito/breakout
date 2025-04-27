@@ -2,6 +2,7 @@ from typing import Dict, Set
 
 import pygame
 
+from src.audio import Mixer
 from src.ball import Ball
 from src.bat import Bat
 from src.blackboard import Blackboard
@@ -33,6 +34,9 @@ class Breakout:
     self._middleground_group = pygame.sprite.Group()
     self._foreground_group = pygame.sprite.Group()
 
+    # Audio
+    self._mixer = Mixer()
+
     # Create game objects
     self._blackboard = Blackboard(
       score=INITIAL_SCORE,
@@ -56,7 +60,8 @@ class Breakout:
 
     ball = Ball(
       ball_group=self._middleground_group,
-      shadow_group=self._background_group
+      shadow_group=self._background_group,
+      mixer=self._mixer
     )
 
     self._game_objects = [
