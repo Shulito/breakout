@@ -4,6 +4,7 @@ from typing import List, Set
 import pygame
 
 from src.audio import Mixer, SoundName
+from src.bat import Bat
 from src.blackboard import Blackboard
 from src.collision import Collision, ObjectType
 from src.constants import (
@@ -28,6 +29,7 @@ class Ball(GameObject):
       self,
       ball_group: pygame.sprite.Group,
       shadow_group: pygame.sprite.Group,
+      bat: Bat,
       mixer: Mixer
   ):
     ball_surface = load_image(file_path=path.join(STAGE_IMAGES_FOLDER_PATH, "ball.png"))
@@ -42,8 +44,8 @@ class Ball(GameObject):
 
     self._mixer = mixer
 
+    self._bat = bat
     self._follow_bat = False
-    self._bat_frect = None
     self._direction = None
     self._speed = BALL_SPEED_INITIAL
 
@@ -80,7 +82,7 @@ class Ball(GameObject):
         else:
           self._direction.x = abs(self._direction.x)
 
-        self._ball_sprite.rect.center = (self._ball_sprite.rect.center[X_COORD], BALL_INITIAL_COORD[Y_COORD])
+        self._ball_sprite.rect.bottom = collision.rect.top
         self._mixer.play_sound(SoundName.BALL_HITS_BAT)
 
   def get_interested_notification_types(self) -> Set[NotificationType] | None:
@@ -95,11 +97,9 @@ class Ball(GameObject):
     match notification_type:
       case NotificationType.INITIAL_SETUP | NotificationType.BALL_MISSED:
         self._follow_bat = True
-        self._bat_frect = blackboard.bat_frect
       case NotificationType.BALL_RELEASED:
         if self._follow_bat:
           self._follow_bat = False
-          self._bat_frect = None
 
           self._direction = VECTOR_45_DEGREES_RIGHT_UP
           self._speed = BALL_SPEED_INITIAL
@@ -109,8 +109,8 @@ class Ball(GameObject):
   def update(self, delta_ms: float) -> None:
     if self._follow_bat:
       self._ball_sprite.rect.center = (
-        self._bat_frect.center[X_COORD],
-        self._bat_frect.topleft[Y_COORD] - BALL_RADIUS
+        self._bat.get_frect().center[X_COORD],
+        self._bat.get_frect().topleft[Y_COORD] - BALL_RADIUS
       )
     else:
       self._speed = min(BALL_SPEED_MAX, self._speed + BALL_SPEED_INCREMENT * delta_ms)
