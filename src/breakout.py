@@ -48,18 +48,17 @@ class Breakout:
       bat_group=self._middleground_group,
       shadow_group=self._background_group
     )
-    self._bat = bat
 
     ball = Ball(
       ball_group=self._middleground_group,
       shadow_group=self._background_group,
+      bat=bat,
       mixer=self._mixer
     )
 
     self._blackboard = Blackboard(
       score=INITIAL_SCORE,
-      lives=INITIAL_LIVES,
-      bat_frect=bat.get_frect()
+      lives=INITIAL_LIVES
     )
 
     self._game_objects = [
