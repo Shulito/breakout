@@ -18,6 +18,7 @@ from src.constants import (
 )
 from src.interfaces import GameObject
 from src.notifications import NotificationType
+from src.pit import Pit
 from src.playground import Playground
 from src.utils import get_notifications_from_pressed_keys
 
@@ -56,6 +57,8 @@ class Breakout:
       mixer=self._mixer
     )
 
+    pit = Pit()
+
     self._blackboard = Blackboard(
       score=INITIAL_SCORE,
       lives=INITIAL_LIVES
@@ -64,7 +67,8 @@ class Breakout:
     self._game_objects = [
       playground,
       bat,
-      ball
+      ball,
+      pit
     ]
 
     # Wire up notifications

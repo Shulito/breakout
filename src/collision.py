@@ -8,8 +8,9 @@ class ObjectType(Enum):
   BALL = 1
   BAT = 2
   BRICK = 3
-  SIDE_WALL = 4
-  TOP_WALL = 5
+  PIT = 4
+  SIDE_WALL = 5
+  TOP_WALL = 6
 
 
 @dataclass
