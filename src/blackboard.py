@@ -7,4 +7,4 @@ import pygame
 class Blackboard:
   score: int
   lives: int
-  bat_frect: pygame.FRect | None
+  bat_frect: pygame.FRect

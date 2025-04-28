@@ -10,7 +10,6 @@ from src.constants import (
   BAT_SPEED,
   PLAYER_IMAGES_FOLDER_PATH,
   X_COORD,
-  Y_COORD,
 )
 from src.coord import CoordPosition
 from src.interfaces import GameObject
@@ -58,16 +57,10 @@ class Bat(GameObject):
       case ObjectType.SIDE_WALL:
         if collision.rect.center[X_COORD] < self._bat_sprite.rect.center[X_COORD]:
           # Colliding to the left
-          self._bat_sprite.rect.topleft = (
-            collision.rect.topright[X_COORD],
-            self._bat_sprite.rect.topleft[Y_COORD]
-          )
+          self._bat_sprite.rect.left = collision.rect.right
         else:
           # Colliding to the right
-          self._bat_sprite.rect.topright = (
-            collision.rect.topleft[X_COORD],
-            self._bat_sprite.rect.topleft[Y_COORD]
-          )
+          self._bat_sprite.rect.right = collision.rect.left
 
         follow_shadow(self._bat_sprite, self._shadow_sprite)
 

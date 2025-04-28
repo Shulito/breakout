@@ -32,7 +32,6 @@ from src.utils import create_sprite_from_surface, load_image, render_text
 class Playground(GameObject):
   def __init__(
       self,
-      blackboard: Blackboard,
       pattern_group: pygame.sprite.Group,
       boundaries_group: pygame.sprite.Group,
       text_group: pygame.sprite.Group
