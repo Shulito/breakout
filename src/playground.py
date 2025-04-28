@@ -98,6 +98,15 @@ class Playground(GameObject):
     ]
 
   def _render_labels(self, blackboard: Blackboard) -> None:
+    if self._score_title_sprite:
+      self._score_title_sprite.kill()
+    if self._score_value_sprite:
+      self._score_value_sprite.kill()
+    if self._lives_title_sprite:
+      self._lives_title_sprite.kill()
+    if self._lives_value_sprite:
+      self._lives_value_sprite.kill()
+
     # create new sprites with new values
     self._score_title_sprite = render_text(
       text=PLAYGROUND_SCORE_TITLE,
@@ -141,7 +150,10 @@ class Playground(GameObject):
     return
 
   def get_interested_notification_types(self) -> Set[NotificationType] | None:
-    return None
+    return {
+      NotificationType.BALL_MISSED,
+      NotificationType.BRICK_DESTROYED
+    }
 
   def emit_notification(self) -> NotificationType | None:
     return None
@@ -149,6 +161,9 @@ class Playground(GameObject):
   def receive_notification(self, notification_type: NotificationType, blackboard: Blackboard) -> None:
     match notification_type:
       case NotificationType.INITIAL_SETUP:
+        self._render_labels(blackboard)
+      case NotificationType.BALL_MISSED:
+        blackboard.lives -= 1
         self._render_labels(blackboard)
 
   def update(self, delta_ms: float) -> None:

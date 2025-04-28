@@ -87,7 +87,8 @@ class Ball(GameObject):
 
   def get_interested_notification_types(self) -> Set[NotificationType] | None:
     return {
-      NotificationType.BALL_RELEASED
+      NotificationType.BALL_RELEASED,
+      NotificationType.BALL_MISSED
     }
 
   def emit_notification(self) -> NotificationType | None:
