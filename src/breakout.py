@@ -38,14 +38,7 @@ class Breakout:
     self._mixer = Mixer()
 
     # Create game objects
-    self._blackboard = Blackboard(
-      score=INITIAL_SCORE,
-      lives=INITIAL_LIVES,
-      bat_frect=None
-    )
-
     playground = Playground(
-      blackboard=self._blackboard,
       pattern_group=self._background_group,
       boundaries_group=self._foreground_group,
       text_group=self._foreground_group
@@ -55,13 +48,18 @@ class Breakout:
       bat_group=self._middleground_group,
       shadow_group=self._background_group
     )
-
-    self._blackboard.bat_frect = bat.get_frect()
+    self._bat = bat
 
     ball = Ball(
       ball_group=self._middleground_group,
       shadow_group=self._background_group,
       mixer=self._mixer
+    )
+
+    self._blackboard = Blackboard(
+      score=INITIAL_SCORE,
+      lives=INITIAL_LIVES,
+      bat_frect=bat.get_frect()
     )
 
     self._game_objects = [

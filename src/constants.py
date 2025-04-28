@@ -37,15 +37,14 @@ VECTOR_45_DEGREES_RIGHT_UP: Final[pygame.Vector2] = pygame.Vector2(X_RIGHT, Y_UP
 VECTOR_45_DEGREES_LEFT_UP: Final[pygame.Vector2] = pygame.Vector2(X_LEFT, Y_UP).normalize()
 
 RADIANS_340_DEGREES = math.radians(340)
-RADIANS_200_DEGREES = math.radians(200)
 
 VECTOR_20_DEGREES_RIGHT_UP: Final[pygame.Vector2] = pygame.Vector2(
   math.cos(RADIANS_340_DEGREES),
   math.sin(RADIANS_340_DEGREES)
 )
 VECTOR_20_DEGREES_LEFT_UP: Final[pygame.Vector2] = pygame.Vector2(
-  math.cos(RADIANS_200_DEGREES),
-  math.sin(RADIANS_200_DEGREES)
+  -VECTOR_20_DEGREES_RIGHT_UP.x,
+  VECTOR_20_DEGREES_RIGHT_UP.y
 )
 
 # Playground constants

@@ -12,11 +12,7 @@ from src.constants import (
   BALL_SPEED_INCREMENT,
   BALL_SPEED_INITIAL,
   BALL_SPEED_MAX,
-  BAT_HALF_WIDTH,
   STAGE_IMAGES_FOLDER_PATH,
-  VECTOR_20_DEGREES_LEFT_UP,
-  VECTOR_20_DEGREES_RIGHT_UP,
-  VECTOR_45_DEGREES_LEFT_UP,
   VECTOR_45_DEGREES_RIGHT_UP,
   X_COORD,
   Y_COORD,
@@ -49,7 +45,7 @@ class Ball(GameObject):
     self._follow_bat = False
     self._bat_frect = None
     self._direction = None
-    self._velocity = BALL_SPEED_INITIAL
+    self._speed = BALL_SPEED_INITIAL
 
   def reacts_to_collisions(self) -> bool:
     return True
@@ -67,60 +63,24 @@ class Ball(GameObject):
       case ObjectType.SIDE_WALL:
         if collision.rect.center[X_COORD] < self._ball_sprite.rect.center[X_COORD]:
           # Colliding to the left
-          self._ball_sprite.rect.topleft = (
-            collision.rect.topright[X_COORD],
-            self._ball_sprite.rect.topleft[Y_COORD]
-          )
+          self._ball_sprite.rect.left = collision.rect.right
         else:
           # Colliding to the right
-          self._ball_sprite.rect.topright = (
-            collision.rect.topleft[X_COORD],
-            self._ball_sprite.rect.topleft[Y_COORD]
-          )
+          self._ball_sprite.rect.right = collision.rect.left
 
-        self._direction = pygame.Vector2(-self._direction[X_COORD], self._direction[Y_COORD])
+        self._direction.x *= -1
       case ObjectType.TOP_WALL:
-        self._ball_sprite.rect.topleft = (
-          self._ball_sprite.rect.topleft[X_COORD],
-          collision.rect.bottomleft[Y_COORD]
-        )
-
-        self._direction = pygame.Vector2(self._direction[X_COORD], -self._direction[Y_COORD])
+        self._ball_sprite.rect.top = collision.rect.bottom
+        self._direction.y *= -1
       case ObjectType.BAT:
-        if self._ball_sprite.rect.center[Y_COORD] < collision.rect.center[Y_COORD]:
-          # Player reached the ball
-          self._ball_sprite.rect.center = (
-            self._ball_sprite.rect.center[X_COORD],
-            collision.rect.topleft[Y_COORD] - BALL_RADIUS
-          )
+        self._direction.y *= -1
 
-          if self._ball_sprite.rect.center[X_COORD] < collision.rect.center[X_COORD]:
-            if self._ball_sprite.rect.center[X_COORD] < collision.rect.center[X_COORD] - BAT_HALF_WIDTH:
-              self._direction = VECTOR_20_DEGREES_LEFT_UP
-            else:
-              self._direction = VECTOR_45_DEGREES_LEFT_UP
-          else:
-            if self._ball_sprite.rect.center[X_COORD] > collision.rect.center[X_COORD] + BAT_HALF_WIDTH:
-              self._direction = VECTOR_20_DEGREES_RIGHT_UP
-            else:
-              self._direction = VECTOR_45_DEGREES_RIGHT_UP
+        if self._ball_sprite.rect.center[X_COORD] < collision.rect.center[X_COORD]:
+          self._direction.x = -abs(self._direction.x)
         else:
-          # Too far bellow the top of the bat, player missed the ball
-          if self._ball_sprite.rect.center[X_COORD] < collision.rect.center[X_COORD]:
-            # Colliding to the left
-            self._ball_sprite.rect.topright = (
-              collision.rect.topleft[X_COORD] - BALL_RADIUS,
-              self._ball_sprite.rect.topright[Y_COORD]
-            )
-          else:
-            # Colliding to the right
-            self._ball_sprite.rect.topleft = (
-              collision.rect.topright[X_COORD] + BALL_RADIUS,
-              self._ball_sprite.rect.topleft[Y_COORD]
-            )
+          self._direction.x = abs(self._direction.x)
 
-          self._direction = pygame.Vector2(-self._direction[X_COORD], self._direction[Y_COORD])
-
+        self._ball_sprite.rect.center = (self._ball_sprite.rect.center[X_COORD], BALL_INITIAL_COORD[Y_COORD])
         self._mixer.play_sound(SoundName.BALL_HITS_BAT)
 
   def get_interested_notification_types(self) -> Set[NotificationType] | None:
@@ -142,7 +102,7 @@ class Ball(GameObject):
           self._bat_frect = None
 
           self._direction = VECTOR_45_DEGREES_RIGHT_UP
-          self._velocity = BALL_SPEED_INITIAL
+          self._speed = BALL_SPEED_INITIAL
 
           self._mixer.play_sound(SoundName.BALL_HITS_BAT)
 
@@ -153,7 +113,7 @@ class Ball(GameObject):
         self._bat_frect.topleft[Y_COORD] - BALL_RADIUS
       )
     else:
-      self._velocity = min(BALL_SPEED_MAX, self._velocity + BALL_SPEED_INCREMENT * delta_ms)
-      self._ball_sprite.rect.center += self._direction * self._velocity * delta_ms
+      self._speed = min(BALL_SPEED_MAX, self._speed + BALL_SPEED_INCREMENT * delta_ms)
+      self._ball_sprite.rect.center += self._direction * self._speed * delta_ms
 
     follow_shadow(self._ball_sprite, self._shadow_sprite)
