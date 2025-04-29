@@ -146,7 +146,7 @@ class Ball(GameObject):
 
     if self._follow_bat:
       self._ball_sprite.rect.center = (
-        self._bat.get_rect().center[X_COORD] + BALL_RADIUS,
+        self._bat.get_rect().center[X_COORD] + 4 * BALL_RADIUS,
         self._bat.get_rect().topleft[Y_COORD] - BALL_RADIUS
       )
     else:

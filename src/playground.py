@@ -98,6 +98,7 @@ class Playground(GameObject):
     ]
 
   def _render_labels(self, blackboard: Blackboard) -> None:
+    # Remove old sprites, if any, from the sprite groups they're in
     if self._score_title_sprite:
       self._score_title_sprite.kill()
     if self._score_value_sprite:
@@ -107,7 +108,7 @@ class Playground(GameObject):
     if self._lives_value_sprite:
       self._lives_value_sprite.kill()
 
-    # create new sprites with new values
+    # Create new sprites with new values
     self._score_title_sprite = render_text(
       text=PLAYGROUND_SCORE_TITLE,
       font=self._title_font,

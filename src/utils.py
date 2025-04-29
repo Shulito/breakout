@@ -43,7 +43,7 @@ def load_image(file_path: str, has_transparency: bool = True) -> pygame.Surface:
   return surface
 
 
-def get_frect_from_sprite(
+def get_rect_from_sprite(
     sprite: pygame.sprite.Sprite,
     coord: Tuple[int | float, int | float],
     coord_position: CoordPosition
@@ -66,7 +66,7 @@ def create_sprite_from_surface(
 ) -> Tuple[pygame.sprite.Sprite, pygame.sprite.Sprite | None]:
   sprite = pygame.sprite.Sprite(sprite_group)
   sprite.image = surface
-  sprite.rect = get_frect_from_sprite(
+  sprite.rect = get_rect_from_sprite(
     sprite=sprite,
     coord=coord,
     coord_position=coord_position
@@ -79,7 +79,7 @@ def create_sprite_from_surface(
 
     shadow_sprite = pygame.sprite.Sprite(shadow_group)
     shadow_sprite.image = shadow_surface
-    shadow_sprite.rect = get_frect_from_sprite(
+    shadow_sprite.rect = get_rect_from_sprite(
       sprite=shadow_sprite,
       coord=coord,
       coord_position=coord_position
