@@ -1,3 +1,4 @@
+import math
 from os import path
 from typing import Dict, Final, Tuple
 
@@ -33,6 +34,18 @@ VECTOR_LEFT: Final[pygame.Vector2] = pygame.Vector2(X_LEFT, 0)
 VECTOR_RIGHT: Final[pygame.Vector2] = pygame.Vector2(X_RIGHT, 0)
 
 VECTOR_45_DEGREES_RIGHT_UP: Final[pygame.Vector2] = pygame.Vector2(X_RIGHT, Y_UP).normalize()
+VECTOR_45_DEGREES_LEFT_UP: Final[pygame.Vector2] = pygame.Vector2(X_LEFT, Y_UP).normalize()
+
+DEGREES_20_IN_RADIANS: Final[float] = math.radians(340)
+
+VECTOR_20_DEGREES_RIGHT_UP: Final[pygame.Vector2] = pygame.Vector2(
+  math.cos(DEGREES_20_IN_RADIANS),
+  math.sin(DEGREES_20_IN_RADIANS)
+)
+VECTOR_20_DEGREES_LEFT_UP: Final[pygame.Vector2] = pygame.Vector2(
+  -VECTOR_20_DEGREES_RIGHT_UP.x,
+  VECTOR_20_DEGREES_RIGHT_UP.y
+)
 
 # Playground constants
 BOUNDARIES_TOP_LEFT_COORD: Final[Tuple[int, int]] = (0, 0)
@@ -56,6 +69,7 @@ CONTENT_FONT_COLOR: Final[Tuple[int, int, int]] = (214, 45, 36)
 # Bat constants
 BAT_INITIAL_COORD: Final[Tuple[float, float]] = (PLAYGROUND_WIDTH / 2 + PLAYGROUND_TOP_LEFT_COORD[X_COORD], 526)
 BAT_SPEED: Final[float] = 400.0
+BAT_QUARTER_WIDTH: Final[float] = 20
 
 KEYS_TO_DIRECTIONS_MAPPING: Final[Dict[int, pygame.math.Vector2]] = {
   pygame.K_RIGHT: VECTOR_RIGHT,

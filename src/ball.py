@@ -6,14 +6,23 @@ import pygame
 from src.audio import Mixer, SoundName
 from src.bat import Bat
 from src.blackboard import Blackboard
-from src.collision import Collision, ObjectType
+from src.collision import (
+  Collision,
+  ObjectType,
+  resolve_collision_by_direction,
+  resolve_collision_by_trajectory,
+)
 from src.constants import (
   BALL_INITIAL_COORD,
   BALL_RADIUS,
   BALL_SPEED_INCREMENT,
   BALL_SPEED_INITIAL,
   BALL_SPEED_MAX,
+  BAT_QUARTER_WIDTH,
   STAGE_IMAGES_FOLDER_PATH,
+  VECTOR_20_DEGREES_LEFT_UP,
+  VECTOR_20_DEGREES_RIGHT_UP,
+  VECTOR_45_DEGREES_LEFT_UP,
   VECTOR_45_DEGREES_RIGHT_UP,
   X_COORD,
   Y_COORD,
@@ -48,6 +57,7 @@ class Ball(GameObject):
     self._follow_bat = False
     self._direction = None
     self._speed = BALL_SPEED_INITIAL
+    self._previous_rect = self._ball_sprite.rect.copy()
 
   def reacts_to_collisions(self) -> bool:
     return True
@@ -63,26 +73,39 @@ class Ball(GameObject):
   def has_collided(self, collision: Collision) -> None:
     match collision.object_type:
       case ObjectType.SIDE_WALL:
-        if collision.rect.center[X_COORD] < self._ball_sprite.rect.center[X_COORD]:
-          # Colliding to the left
-          self._ball_sprite.rect.left = collision.rect.right
-        else:
-          # Colliding to the right
-          self._ball_sprite.rect.right = collision.rect.left
-
         self._direction.x *= -1
+
+        resolve_collision_by_trajectory(
+          previous_rect=self._previous_rect,
+          rect=self._ball_sprite.rect,
+          colliding_rect=collision.rect
+        )
       case ObjectType.TOP_WALL:
-        self._ball_sprite.rect.top = collision.rect.bottom
         self._direction.y *= -1
+
+        resolve_collision_by_trajectory(
+          previous_rect=self._previous_rect,
+          rect=self._ball_sprite.rect,
+          colliding_rect=collision.rect
+        )
       case ObjectType.BAT:
-        self._direction.y *= -1
-
         if self._ball_sprite.rect.center[X_COORD] < collision.rect.center[X_COORD]:
-          self._direction.x = -abs(self._direction.x)
+          if self._ball_sprite.rect.center[X_COORD] < collision.rect.center[X_COORD] - BAT_QUARTER_WIDTH:
+            self._direction = VECTOR_20_DEGREES_LEFT_UP.copy()
+          else:
+            self._direction = VECTOR_45_DEGREES_LEFT_UP.copy()
         else:
-          self._direction.x = abs(self._direction.x)
+          if self._ball_sprite.rect.center[X_COORD] > collision.rect.center[X_COORD] + BAT_QUARTER_WIDTH:
+            self._direction = VECTOR_20_DEGREES_RIGHT_UP.copy()
+          else:
+            self._direction = VECTOR_45_DEGREES_RIGHT_UP.copy()
 
-        self._ball_sprite.rect.bottom = collision.rect.top
+        resolve_collision_by_direction(
+          direction=self._direction,
+          rect=self._ball_sprite.rect,
+          colliding_rect=collision.rect
+        )
+
         self._mixer.play_sound(SoundName.BALL_HITS_BAT)
 
   def get_interested_notification_types(self) -> Set[NotificationType] | None:
@@ -102,16 +125,18 @@ class Ball(GameObject):
         if self._follow_bat:
           self._follow_bat = False
 
-          self._direction = VECTOR_45_DEGREES_RIGHT_UP
+          self._direction = VECTOR_45_DEGREES_RIGHT_UP.copy()
           self._speed = BALL_SPEED_INITIAL
 
           self._mixer.play_sound(SoundName.BALL_HITS_BAT)
 
   def update(self, delta_ms: float) -> None:
+    self._previous_rect = self._ball_sprite.rect.copy()
+
     if self._follow_bat:
       self._ball_sprite.rect.center = (
-        self._bat.get_frect().center[X_COORD],
-        self._bat.get_frect().topleft[Y_COORD] - BALL_RADIUS
+        self._bat.get_rect().center[X_COORD] + BALL_RADIUS,
+        self._bat.get_rect().topleft[Y_COORD] - BALL_RADIUS
       )
     else:
       self._speed = min(BALL_SPEED_MAX, self._speed + BALL_SPEED_INCREMENT * delta_ms)
