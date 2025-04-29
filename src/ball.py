@@ -89,22 +89,33 @@ class Ball(GameObject):
           colliding_rect=collision.rect
         )
       case ObjectType.BAT:
-        if self._ball_sprite.rect.center[X_COORD] < collision.rect.center[X_COORD]:
-          if self._ball_sprite.rect.center[X_COORD] < collision.rect.center[X_COORD] - BAT_QUARTER_WIDTH:
-            self._direction = VECTOR_20_DEGREES_LEFT_UP.copy()
+        if self._ball_sprite.rect.center[Y_COORD] < collision.rect.center[Y_COORD]:
+          # Hitting with upper part of the bat
+          if self._ball_sprite.rect.center[X_COORD] < collision.rect.center[X_COORD]:
+            if self._ball_sprite.rect.center[X_COORD] < collision.rect.center[X_COORD] - BAT_QUARTER_WIDTH:
+              self._direction = VECTOR_20_DEGREES_LEFT_UP.copy()
+            else:
+              self._direction = VECTOR_45_DEGREES_LEFT_UP.copy()
           else:
-            self._direction = VECTOR_45_DEGREES_LEFT_UP.copy()
-        else:
-          if self._ball_sprite.rect.center[X_COORD] > collision.rect.center[X_COORD] + BAT_QUARTER_WIDTH:
-            self._direction = VECTOR_20_DEGREES_RIGHT_UP.copy()
-          else:
-            self._direction = VECTOR_45_DEGREES_RIGHT_UP.copy()
+            if self._ball_sprite.rect.center[X_COORD] > collision.rect.center[X_COORD] + BAT_QUARTER_WIDTH:
+              self._direction = VECTOR_20_DEGREES_RIGHT_UP.copy()
+            else:
+              self._direction = VECTOR_45_DEGREES_RIGHT_UP.copy()
 
-        resolve_collision_by_direction(
-          direction=self._direction,
-          rect=self._ball_sprite.rect,
-          colliding_rect=collision.rect
-        )
+          resolve_collision_by_direction(
+            direction=self._direction,
+            rect=self._ball_sprite.rect,
+            colliding_rect=collision.rect
+          )
+        else:
+          # Hitting with lower part of the bat
+          self._direction.x *= -1
+
+          resolve_collision_by_trajectory(
+            previous_rect=self._previous_rect,
+            rect=self._ball_sprite.rect,
+            colliding_rect=collision.rect
+          )
 
         self._mixer.play_sound(SoundName.BALL_HITS_BAT)
 
