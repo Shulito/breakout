@@ -38,7 +38,7 @@ class Bat(GameObject):
       shadow_group=shadow_group
     )
 
-  def get_frect(self) -> pygame.FRect:
+  def get_rect(self) -> pygame.FRect:
     return self._bat_sprite.rect
 
   def reacts_to_collisions(self) -> bool:
