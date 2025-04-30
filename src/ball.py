@@ -122,6 +122,17 @@ class Ball(GameObject):
 
         self._mixer.play_sound(SoundName.BALL_HITS_BAT)
       case ObjectType.BRICK:
+        resolve_collision_by_trajectory(
+          previous_rect=self._previous_rect,
+          rect=self._ball_sprite.rect,
+          colliding_rect=collision.rect
+        )
+
+        if self._ball_sprite.rect.left >= collision.rect.right or self._ball_sprite.rect.right <= collision.rect.left:
+          self._direction.x *= -1
+        else:
+          self._direction.y *= -1
+
         self._notifications_sink.write(
           notification=NotificationType.BRICK_DESTROYED,
           extra_data={EXTRA_DATA_BRICK_RECT: collision.rect}
