@@ -92,6 +92,16 @@ BALL_SPEED_INITIAL: Final[float] = 200.0
 BALL_SPEED_MAX: Final[float] = 1200.0
 BALL_SPEED_INCREMENT: Final[float] = 20.0
 
+# Brick constants
+BRICKS_TOP_COORD: Final[Tuple[float, float]] = (80, 112)
+BRICK_WIDTH: Final[float] = 50
+BRICK_HEIGHT: Final[float] = 20
+
+BRICKS_HORIZONTAL_COUNT: Final[int] = 10
+BRICKS_VERTICAL_COUNT: Final[int] = 5
+
+EXTRA_DATA_BRICK_RECT: Final[str] = "brick_rect"
+
 # File system constants
 CONTENT_FOLDER_PATH: Final[str] = path.abspath(path.join(path.dirname(__file__), "..", "content"))
 

@@ -13,6 +13,10 @@ from src.coord import CoordPosition
 from src.notifications import NotificationType
 
 
+def rect_to_hashable_value(rect: pygame.FRect) -> str:
+  return f"{rect.x}:{rect.y}:{rect.width}:{rect.height}"
+
+
 def get_direction_from_pressed_keys() -> pygame.math.Vector2:
   pressed_keys = pygame.key.get_pressed()
   final_direction = pygame.math.Vector2(0.0, 0.0)

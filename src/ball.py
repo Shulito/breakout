@@ -1,5 +1,5 @@
 from os import path
-from typing import List, Set
+from typing import Any, Dict, List, Set
 
 import pygame
 
@@ -19,6 +19,7 @@ from src.constants import (
   BALL_SPEED_INITIAL,
   BALL_SPEED_MAX,
   BAT_QUARTER_WIDTH,
+  EXTRA_DATA_BRICK_RECT,
   STAGE_IMAGES_FOLDER_PATH,
   VECTOR_20_DEGREES_LEFT_UP,
   VECTOR_20_DEGREES_RIGHT_UP,
@@ -29,7 +30,7 @@ from src.constants import (
 )
 from src.coord import CoordPosition
 from src.interfaces import GameObject
-from src.notifications import NotificationType
+from src.notifications import NotificationsSink, NotificationType
 from src.utils import create_sprite_from_surface, follow_shadow, load_image
 
 
@@ -39,7 +40,8 @@ class Ball(GameObject):
       ball_group: pygame.sprite.Group,
       shadow_group: pygame.sprite.Group,
       bat: Bat,
-      mixer: Mixer
+      mixer: Mixer,
+      notifications_sink: NotificationsSink
   ):
     ball_surface = load_image(file_path=path.join(STAGE_IMAGES_FOLDER_PATH, "ball.png"))
 
@@ -52,6 +54,7 @@ class Ball(GameObject):
     )
 
     self._mixer = mixer
+    self._notifications_sink = notifications_sink
 
     self._bat = bat
     self._follow_bat = False
@@ -118,6 +121,13 @@ class Ball(GameObject):
           )
 
         self._mixer.play_sound(SoundName.BALL_HITS_BAT)
+      case ObjectType.BRICK:
+        self._notifications_sink.write(
+          notification=NotificationType.BRICK_DESTROYED,
+          extra_data={EXTRA_DATA_BRICK_RECT: collision.rect}
+        )
+
+        self._mixer.play_sound(SoundName.BALL_HITS_BRICK)
 
   def get_interested_notification_types(self) -> Set[NotificationType] | None:
     return {
@@ -125,10 +135,12 @@ class Ball(GameObject):
       NotificationType.BALL_MISSED
     }
 
-  def emit_notification(self) -> NotificationType | None:
-    return None
-
-  def receive_notification(self, notification_type: NotificationType, blackboard: Blackboard) -> None:
+  def receive_notification(
+      self,
+      notification_type: NotificationType,
+      blackboard: Blackboard,
+      extra_data: Dict[Any, Any] = None
+  ) -> None:
     match notification_type:
       case NotificationType.INITIAL_SETUP | NotificationType.BALL_MISSED:
         self._follow_bat = True

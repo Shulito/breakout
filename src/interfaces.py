@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List, Set
+from typing import Any, Dict, List, Set
 
 from src.blackboard import Blackboard
 from src.collision import Collision
@@ -24,11 +24,12 @@ class GameObject(ABC):
     pass
 
   @abstractmethod
-  def emit_notification(self) -> NotificationType | None:
-    pass
-
-  @abstractmethod
-  def receive_notification(self, notification_type: NotificationType, blackboard: Blackboard) -> None:
+  def receive_notification(
+      self,
+      notification_type: NotificationType,
+      blackboard: Blackboard,
+      extra_data: Dict[Any, Any] = None
+  ) -> None:
     pass
 
   @abstractmethod

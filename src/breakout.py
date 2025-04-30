@@ -6,6 +6,7 @@ from src.audio import Mixer
 from src.ball import Ball
 from src.bat import Bat
 from src.blackboard import Blackboard
+from src.bricks import BrickLayer
 from src.collision import Collision
 from src.constants import (
   FPS,
@@ -17,7 +18,7 @@ from src.constants import (
   SCREEN_WIDTH,
 )
 from src.interfaces import GameObject
-from src.notifications import NotificationType
+from src.notifications import NotificationsSink, NotificationType
 from src.pit import Pit
 from src.playground import Playground
 from src.utils import get_notifications_from_pressed_keys
@@ -39,6 +40,8 @@ class Breakout:
     self._mixer = Mixer()
 
     # Create game objects
+    self._notifications_sink = NotificationsSink()
+
     playground = Playground(
       pattern_group=self._background_group,
       boundaries_group=self._foreground_group,
@@ -54,10 +57,18 @@ class Breakout:
       ball_group=self._middleground_group,
       shadow_group=self._background_group,
       bat=bat,
-      mixer=self._mixer
+      mixer=self._mixer,
+      notifications_sink=self._notifications_sink
     )
 
-    pit = Pit()
+    pit = Pit(
+      notifications_sink=self._notifications_sink
+    )
+
+    brick_layer = BrickLayer(
+      bricks_group=self._middleground_group,
+      shadow_group=self._background_group,
+    )
 
     self._blackboard = Blackboard(
       score=INITIAL_SCORE,
@@ -68,7 +79,8 @@ class Breakout:
       playground,
       bat,
       ball,
-      pit
+      pit,
+      brick_layer
     ]
 
     # Wire up notifications
@@ -132,12 +144,12 @@ class Breakout:
             game_object.has_collided(collision)
 
         # Check notifications
-        notification = game_object.emit_notification()
-        if notification:
+        for notification, extra_data in self._notifications_sink.read_all():
           for game_object_to_notify in self._notification_mapping[notification]:
             game_object_to_notify.receive_notification(
               notification_type=notification,
-              blackboard=self._blackboard
+              blackboard=self._blackboard,
+              extra_data=extra_data
             )
 
         for player_notification in player_notifications:
