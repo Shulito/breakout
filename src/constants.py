@@ -71,7 +71,7 @@ POINTS_TO_GAIN_LIFE: Final[int] = 500
 
 # Bat constants
 BAT_INITIAL_COORD: Final[Tuple[float, float]] = (PLAYGROUND_WIDTH / 2 + PLAYGROUND_TOP_LEFT_COORD[X_COORD], 526)
-BAT_SPEED: Final[float] = 400.0
+BAT_SPEED: Final[float] = 500.0
 BAT_QUARTER_WIDTH: Final[float] = 20
 
 KEYS_TO_DIRECTIONS_MAPPING: Final[Dict[int, pygame.math.Vector2]] = {
@@ -91,8 +91,8 @@ KEYS_TO_NOTIFICATION_MAPPING: Final[Dict[int, NotificationType]] = {
 BALL_INITIAL_COORD: Final[Tuple[float, float]] = (BAT_INITIAL_COORD[0], 515)
 BALL_RADIUS: Final[int] = 4
 
-BALL_SPEED_INITIAL: Final[float] = 200.0
-BALL_SPEED_MAX: Final[float] = 1200.0
+BALL_SPEED_INITIAL: Final[float] = 300.0
+BALL_SPEED_MAX: Final[float] = 1500.0
 BALL_SPEED_INCREMENT: Final[float] = 20.0
 
 # Brick constants
