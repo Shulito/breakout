@@ -65,9 +65,7 @@ class Bat(GameObject):
         follow_shadow(self._bat_sprite, self._shadow_sprite)
 
   def get_interested_notification_types(self) -> Set[NotificationType] | None:
-    return {
-      NotificationType.BALL_MISSED
-    }
+    return None
 
   def receive_notification(
       self,
