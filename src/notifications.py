@@ -13,8 +13,6 @@ class NotificationType(Enum):
     BRICKS_DESTROYED = 4
     # When the game first starts
     INITIAL_SETUP = 5
-    # When the number of lives of the player has reached zero
-    PLAYER_DIED = 6
 
 
 class NotificationsSink:

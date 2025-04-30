@@ -131,8 +131,10 @@ class Ball(GameObject):
 
   def get_interested_notification_types(self) -> Set[NotificationType] | None:
     return {
+      NotificationType.INITIAL_SETUP,
       NotificationType.BALL_RELEASED,
-      NotificationType.BALL_MISSED
+      NotificationType.BALL_MISSED,
+      NotificationType.BRICKS_DESTROYED
     }
 
   def receive_notification(
@@ -142,7 +144,7 @@ class Ball(GameObject):
       extra_data: Dict[Any, Any] = None
   ) -> None:
     match notification_type:
-      case NotificationType.INITIAL_SETUP | NotificationType.BALL_MISSED:
+      case NotificationType.INITIAL_SETUP | NotificationType.BALL_MISSED | NotificationType.BRICKS_DESTROYED:
         self._follow_bat = True
       case NotificationType.BALL_RELEASED:
         if self._follow_bat:

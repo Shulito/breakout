@@ -18,7 +18,7 @@ from src.constants import (
 )
 from src.coord import CoordPosition
 from src.interfaces import GameObject
-from src.notifications import NotificationType
+from src.notifications import NotificationsSink, NotificationType
 from src.utils import create_sprite_from_surface, load_image, rect_to_hashable_value
 
 
@@ -51,10 +51,12 @@ class BrickLayer(GameObject):
   def __init__(
       self,
       bricks_group: pygame.sprite.Group,
-      shadow_group: pygame.sprite.Group
+      shadow_group: pygame.sprite.Group,
+      notifications_sink: NotificationsSink
   ):
     self._bricks_group = bricks_group
     self._shadow_group = shadow_group
+    self._notifications_sink = notifications_sink
 
     self._brick_surfaces: List[pygame.Surface] = [
       load_image(file_path=path.join(BRICK_IMAGES_FOLDER_PATH, "red.png"), has_transparency=False),
@@ -103,6 +105,7 @@ class BrickLayer(GameObject):
 
   def get_interested_notification_types(self) -> Set[NotificationType] | None:
     return {
+      NotificationType.INITIAL_SETUP,
       NotificationType.BRICK_DESTROYED,
       NotificationType.BRICKS_DESTROYED
     }
@@ -118,6 +121,9 @@ class BrickLayer(GameObject):
         self._lay_bricks()
       case NotificationType.BRICK_DESTROYED:
         self._bricks.pop(rect_to_hashable_value(extra_data[EXTRA_DATA_BRICK_RECT]))
+
+        if not self._bricks:
+          self._notifications_sink.write(NotificationType.BRICKS_DESTROYED)
 
   def update(self, delta_ms: float) -> None:
     return
