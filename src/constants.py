@@ -66,6 +66,9 @@ TITLE_FONT_COLOR: Final[Tuple[int, int, int]] = (255, 255, 255)
 CONTENT_FONT_SIZE: Final[int] = 62
 CONTENT_FONT_COLOR: Final[Tuple[int, int, int]] = (214, 45, 36)
 
+POINTS_FOR_BRICK: Final[int] = 1
+POINTS_TO_GAIN_LIFE: Final[int] = 500
+
 # Bat constants
 BAT_INITIAL_COORD: Final[Tuple[float, float]] = (PLAYGROUND_WIDTH / 2 + PLAYGROUND_TOP_LEFT_COORD[X_COORD], 526)
 BAT_SPEED: Final[float] = 400.0

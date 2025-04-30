@@ -10,6 +10,8 @@ from src.constants import (
   CONTENT_FONT_COLOR,
   CONTENT_FONT_SIZE,
   FONTS_FOLDER_PATH,
+  INITIAL_LIVES,
+  INITIAL_SCORE,
   PLAYGROUND_HEIGHT,
   PLAYGROUND_LIVES_TITLE,
   PLAYGROUND_LIVES_TITLE_COORD,
@@ -19,13 +21,15 @@ from src.constants import (
   PLAYGROUND_SCORE_VALUE_COORD,
   PLAYGROUND_TOP_LEFT_COORD,
   PLAYGROUND_WIDTH,
+  POINTS_FOR_BRICK,
+  POINTS_TO_GAIN_LIFE,
   STAGE_IMAGES_FOLDER_PATH,
   TITLE_FONT_COLOR,
   TITLE_FONT_SIZE,
 )
 from src.coord import CoordPosition
 from src.interfaces import GameObject
-from src.notifications import NotificationType
+from src.notifications import NotificationsSink, NotificationType
 from src.utils import create_sprite_from_surface, load_image, render_text
 
 
@@ -34,12 +38,15 @@ class Playground(GameObject):
       self,
       pattern_group: pygame.sprite.Group,
       boundaries_group: pygame.sprite.Group,
-      text_group: pygame.sprite.Group
+      text_group: pygame.sprite.Group,
+      notifications_sink: NotificationsSink
   ):
     self._score_title_sprite = None
     self._score_value_sprite = None
     self._lives_title_sprite = None
     self._lives_value_sprite = None
+
+    self._notifications_sink = notifications_sink
 
     # fonts
     self._text_group = text_group
@@ -167,6 +174,19 @@ class Playground(GameObject):
         self._render_labels(blackboard)
       case NotificationType.BALL_MISSED:
         blackboard.lives -= 1
+        if blackboard.lives <= 0:
+          blackboard.score = INITIAL_SCORE
+          blackboard.lives = INITIAL_LIVES
+
+          self._notifications_sink.write(NotificationType.INITIAL_SETUP)
+
+        self._render_labels(blackboard)
+      case NotificationType.BRICK_DESTROYED:
+        blackboard.score += POINTS_FOR_BRICK
+        if blackboard.score >= POINTS_TO_GAIN_LIFE:
+          blackboard.score = 0
+          blackboard.lives += 1
+
         self._render_labels(blackboard)
 
   def update(self, delta_ms: float) -> None:

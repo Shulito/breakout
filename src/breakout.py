@@ -45,7 +45,8 @@ class Breakout:
     playground = Playground(
       pattern_group=self._background_group,
       boundaries_group=self._foreground_group,
-      text_group=self._foreground_group
+      text_group=self._foreground_group,
+      notifications_sink=self._notifications_sink
     )
 
     bat = Bat(
@@ -68,6 +69,7 @@ class Breakout:
     brick_layer = BrickLayer(
       bricks_group=self._middleground_group,
       shadow_group=self._background_group,
+      notifications_sink=self._notifications_sink
     )
 
     self._blackboard = Blackboard(
