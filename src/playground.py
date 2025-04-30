@@ -1,5 +1,5 @@
 from os import path
-from typing import List, Set
+from typing import Any, Dict, List, Set
 
 import pygame
 
@@ -156,10 +156,12 @@ class Playground(GameObject):
       NotificationType.BRICK_DESTROYED
     }
 
-  def emit_notification(self) -> NotificationType | None:
-    return None
-
-  def receive_notification(self, notification_type: NotificationType, blackboard: Blackboard) -> None:
+  def receive_notification(
+      self,
+      notification_type: NotificationType,
+      blackboard: Blackboard,
+      extra_data: Dict[Any, Any] = None
+  ) -> None:
     match notification_type:
       case NotificationType.INITIAL_SETUP:
         self._render_labels(blackboard)

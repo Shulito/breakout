@@ -1,5 +1,5 @@
 from os import path
-from typing import List, Set
+from typing import Any, Dict, List, Set
 
 import pygame
 
@@ -69,11 +69,13 @@ class Bat(GameObject):
       NotificationType.BALL_MISSED
     }
 
-  def emit_notification(self) -> NotificationType | None:
-    return None
-
-  def receive_notification(self, notification_type: NotificationType, blackboard: Blackboard) -> None:
-    pass
+  def receive_notification(
+      self,
+      notification_type: NotificationType,
+      blackboard: Blackboard,
+      extra_data: Dict[Any, Any] = None
+  ) -> None:
+    return
 
   def update(self, delta_ms: float) -> None:
     direction = get_direction_from_pressed_keys()

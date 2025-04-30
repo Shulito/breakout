@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Any, Dict, List, Tuple
 
 
 class NotificationType(Enum):
@@ -8,7 +9,23 @@ class NotificationType(Enum):
     BALL_RELEASED = 2
     # When the ball hits a brick
     BRICK_DESTROYED = 3
+    # All bricks destroyed
+    BRICKS_DESTROYED = 4
     # When the game first starts
-    INITIAL_SETUP = 4
+    INITIAL_SETUP = 5
     # When the number of lives of the player has reached zero
-    PLAYER_DIED = 5
+    PLAYER_DIED = 6
+
+
+class NotificationsSink:
+    def __init__(self):
+        self._notifications = list()
+
+    def write(self, notification: NotificationType, extra_data: Dict[Any, Any] = None) -> None:
+        self._notifications.append((notification, extra_data))
+
+    def read_all(self) -> List[Tuple[NotificationType, Dict[Any, Any]]]:
+        result = self._notifications.copy()
+        self._notifications.clear()
+
+        return result
