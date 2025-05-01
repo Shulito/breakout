@@ -27,9 +27,10 @@ def resolve_collision_by_trajectory(
     rect: pygame.FRect,
     colliding_rect: pygame.FRect
 ) -> None:
+  x_value_to_move = -1 if rect.center[X_COORD] > previous_rect.center[X_COORD] else 1
+
   slope = rect.center[Y_COORD] - previous_rect.center[Y_COORD]
   slope /= rect.center[X_COORD] - previous_rect.center[X_COORD]
-  x_value_to_move = -1 if rect.center[X_COORD] > previous_rect.center[X_COORD] else 1
 
   new_x = x_value_to_move + rect.center[X_COORD]
   new_y = slope * rect.center[X_COORD] - slope * previous_rect.center[X_COORD] + previous_rect.center[Y_COORD]

@@ -92,11 +92,11 @@ class Playground(GameObject):
     self._collision_rects = [
       Collision(  # Left wall
         object_type=ObjectType.SIDE_WALL,
-        rect=pygame.FRect((0, 32), (80, 567))
+        rect=pygame.FRect((0, 0), (80, 600))
       ),
       Collision(  # Right wall
         object_type=ObjectType.SIDE_WALL,
-        rect=pygame.FRect((580, 32), (80, 567))
+        rect=pygame.FRect((580, 0), (80, 600))
       ),
       Collision(  # Top wall
         object_type=ObjectType.TOP_WALL,
